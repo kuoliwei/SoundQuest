@@ -3,7 +3,13 @@ guid: 3b73ec3afb0225543950853522aace30
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - audioSource: {instanceID: 0}
+  - doClip: {instanceID: 0}
+  - reClip: {instanceID: 0}
+  - miClip: {instanceID: 0}
+  - soClip: {instanceID: 0}
+  - finishClip: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

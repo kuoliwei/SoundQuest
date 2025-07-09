@@ -5,6 +5,7 @@ public class PitchGameController : MonoBehaviour
 {
     private readonly string[] expectedNotes = { "Do", "Re", "Mi", "So" };
     private int currentIndex = 0;
+    private bool isLocked = false;
 
     [Header("音效設定")]
     public AudioSource audioSource;
@@ -16,7 +17,8 @@ public class PitchGameController : MonoBehaviour
 
     void OnEnable()
     {
-        WebSocketClient.Instance.OnMessageReceived += HandleMessage;
+        if (WebSocketClient.Instance != null)
+            WebSocketClient.Instance.OnMessageReceived += HandleMessage;
         currentIndex = 0; // 每次啟用都重置流程
     }
 
@@ -28,52 +30,94 @@ public class PitchGameController : MonoBehaviour
 
     void HandleMessage(string json)
     {
-        SolfegeMessage msg;
-        try
+        if (isLocked)
         {
-            msg = JsonUtility.FromJson<SolfegeMessage>(json);
-        }
-        catch
-        {
-            Debug.LogWarning("非 Solfege 訊息，略過：" + json);
+            Debug.Log($"正在播放音效中，期間不接受指令");
             return;
         }
 
-        if (msg == null || string.IsNullOrEmpty(msg.solfege)) return;
-
-        string expected = expectedNotes[currentIndex];
-        if (msg.solfege == expected)
+        Pitch msg;
+        try
         {
-            Debug.Log($"唱對了：{msg.solfege}");
-            PlayNoteAudio(msg.solfege);
-            currentIndex++;
+            msg = JsonUtility.FromJson<Pitch>(json);
+        }
+        catch
+        {
+            return;
+        }
 
-            if (currentIndex >= expectedNotes.Length)
-            {
-                audioSource.PlayOneShot(finishClip);
-                Debug.Log("完成全部音階！");
-            }
+        if (string.IsNullOrEmpty(msg.solfege)) return;
+
+        string expected = "";
+
+        if (currentIndex >= expectedNotes.Length)
+        {
+            Debug.Log("等待完成音效結束中，忽略輸入");
+            return;
         }
         else
         {
-            Debug.Log($"收到音階 {msg.solfege}，但當前期待 {expected}，略過");
+            expected = expectedNotes[currentIndex];
+        }
+
+        if (msg.solfege == expected)
+        {
+            PlayNoteAudio(msg.solfege);
+            currentIndex++;
+        }
+        else
+        {
+            Debug.Log($"收到 {msg.solfege}，但當前關卡應該是 {expected}");
         }
     }
 
     void PlayNoteAudio(string note)
     {
+        isLocked = true;
+
         switch (note)
         {
-            case "Do": audioSource.PlayOneShot(doClip); break;
-            case "Re": audioSource.PlayOneShot(reClip); break;
-            case "Mi": audioSource.PlayOneShot(miClip); break;
-            case "So": audioSource.PlayOneShot(soClip); break;
+            case "Do":
+                Debug.Log("播放音效：Do");
+                audioSource.PlayOneShot(doClip);
+                Invoke(nameof(UnlockInput), doClip.length);
+                break;
+            case "Re":
+                Debug.Log("播放音效：Re");
+                audioSource.PlayOneShot(reClip);
+                Invoke(nameof(UnlockInput), reClip.length);
+                break;
+            case "Mi":
+                Debug.Log("播放音效：Mi");
+                audioSource.PlayOneShot(miClip);
+                Invoke(nameof(UnlockInput), miClip.length);
+                break;
+            case "So":
+                Debug.Log("播放音效：So");
+                audioSource.PlayOneShot(soClip);
+                Invoke(nameof(UnlockInput), soClip.length);
+
+                // 延遲播放完成音效
+                Invoke(nameof(PlayFinishClip), soClip.length + 0.1f);
+                break;
         }
     }
-
-    [Serializable]
-    public class SolfegeMessage
+    void UnlockInput()
     {
-        public string solfege;
+        Debug.Log("解鎖輸入，允許下一關");
+        isLocked = false;
+    }
+    void PlayFinishClip()
+    {
+        Debug.Log("所有音階正確完成，播放完成音效");
+        audioSource.PlayOneShot(finishClip);
+        // 等完成音效播完後再重設關卡
+        Invoke(nameof(ResetStage), finishClip.length);
+    }
+    void ResetStage()
+    {
+        Debug.Log("重置關卡：currentIndex = 0，isLocked = false");
+        currentIndex = 0;
+        isLocked = false;
     }
 }
