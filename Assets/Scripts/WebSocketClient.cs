@@ -11,6 +11,7 @@ public class WebSocketClient : MonoBehaviour
 
     [SerializeField] private string serverUrl = "ws://192.168.50.25:8765";
     [SerializeField] private InputField webSocketUrlInputField;
+    [SerializeField] Text console;
     private WebSocket websocket;
     private bool isConnecting = false;
     public event Action<string> OnMessageReceived;
@@ -59,12 +60,14 @@ public class WebSocketClient : MonoBehaviour
         websocket.OnOpen += () =>
         {
             Debug.Log("WebSocket Connected");
+            console.text = "WebSocket Connected";
             isConnecting = false;
         };
 
         websocket.OnClose += (e) =>
         {
             Debug.LogWarning("WebSocket Closed. 將於幾秒後嘗試重連...");
+            console.text = "WebSocket Closed. 將於幾秒後嘗試重連...";
             isConnecting = false;
             if (shouldReconnect)
             {
@@ -75,6 +78,7 @@ public class WebSocketClient : MonoBehaviour
         websocket.OnError += (e) =>
         {
             Debug.LogError("WebSocket Error: " + e);
+            console.text = "WebSocket Error: " + e;
             isConnecting = false;
             if (shouldReconnect)
             {
@@ -95,6 +99,7 @@ public class WebSocketClient : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogWarning("連線失敗：" + ex.Message);
+            console.text = "連線失敗：" + ex.Message;
             isConnecting = false;
             if (shouldReconnect)
             {

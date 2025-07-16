@@ -17,6 +17,10 @@ public class VolumeGameController : MonoBehaviour
     [Range(0f, 10f)] [SerializeField] float tolerance;
     [SerializeField] Slider toleranceSlider;
     [SerializeField] Text toleranceValue;
+    [Range(0f, 2f)][SerializeField] float weight;
+    [SerializeField] Slider weightSlider;
+    [SerializeField] Text weightValue;
+
     [SerializeField] Text console;
     private int currentIndex = 0;
     private bool isLocked = false;
@@ -25,6 +29,7 @@ public class VolumeGameController : MonoBehaviour
     void OnEnable()
     {
         toleranceSlider.value = tolerance;
+        weightSlider.value = weight;
         OnToleranceValueChange();
         if (WebSocketClient.Instance != null)
             WebSocketClient.Instance.OnMessageReceived += HandleMessage;
@@ -69,17 +74,19 @@ public class VolumeGameController : MonoBehaviour
         }
 
         int expected = expectedVolumes[currentIndex];
-        if (Mathf.Abs(dB - expected) <= toleranceSlider.value)
+
+        float dBAfterWeight = dB * weightSlider.value;
+        if (Mathf.Abs(dBAfterWeight - expected) <= toleranceSlider.value)
         {
-            Debug.Log($"收到dB：{dB}，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB");
-            console.text = $"收到dB：{dB}，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB";
+            Debug.Log($"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB");
+            console.text = $"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB";
             PlayStageVideo(currentIndex);
             currentIndex++;
         }
         else
         {
-            Debug.Log($"收到 dB={dB}，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略");
-            console.text = $"收到 dB={dB}，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略";
+            Debug.Log($"收到 dB={dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略");
+            console.text = $"收到 dB={dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略";
         }
     }
 
@@ -149,5 +156,9 @@ public class VolumeGameController : MonoBehaviour
     public void OnToleranceValueChange()
     {
         toleranceValue.text = toleranceSlider.value.ToString();
+    }
+    public void OnWeightValueChange()
+    {
+        weightValue.text = weightSlider.value.ToString();
     }
 }

@@ -71,6 +71,7 @@ public class PitchGameController : MonoBehaviour
         else
         {
             Debug.Log($"收到 {msg.solfege}，但當前關卡應該是 {expected}");
+            console.text = $"收到 {msg.solfege}，但當前關卡應該是 {expected}";
         }
     }
 
