@@ -1,11 +1,14 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PitchGameController : MonoBehaviour
 {
     private readonly string[] expectedNotes = { "Do", "Re", "Mi", "So" };
     private int currentIndex = 0;
     private bool isLocked = false;
+
+    [SerializeField] Text console;
 
     [Header("音效設定")]
     public AudioSource audioSource;

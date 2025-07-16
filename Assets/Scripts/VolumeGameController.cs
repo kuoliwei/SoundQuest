@@ -14,11 +14,18 @@ public class VolumeGameController : MonoBehaviour
     public VideoClip clipFinal;
 
     private readonly int[] expectedVolumes = { 50, 70, 90 };
+    [Range(0f, 10f)] [SerializeField] float tolerance;
+    [SerializeField] Slider toleranceSlider;
+    [SerializeField] Text toleranceValue;
+    [SerializeField] Text console;
     private int currentIndex = 0;
     private bool isLocked = false;
+    [SerializeField] float showVideoDelay;
 
     void OnEnable()
     {
+        toleranceSlider.value = tolerance;
+        OnToleranceValueChange();
         if (WebSocketClient.Instance != null)
             WebSocketClient.Instance.OnMessageReceived += HandleMessage;
 
@@ -62,14 +69,17 @@ public class VolumeGameController : MonoBehaviour
         }
 
         int expected = expectedVolumes[currentIndex];
-        if (Mathf.Abs(dB - expected) <= 5)
+        if (Mathf.Abs(dB - expected) <= toleranceSlider.value)
         {
+            Debug.Log($"收到dB：{dB}，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB");
+            console.text = $"收到dB：{dB}，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB";
             PlayStageVideo(currentIndex);
             currentIndex++;
         }
         else
         {
-            Debug.Log($"收到 dB={dB}，但目前預期為 {expected}，忽略");
+            Debug.Log($"收到 dB={dB}，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略");
+            console.text = $"收到 dB={dB}，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略";
         }
     }
 
@@ -87,11 +97,11 @@ public class VolumeGameController : MonoBehaviour
 
         if (clip != null)
         {
-            videoImage.color = Color.white;
             videoPlayer.Stop();
             videoPlayer.clip = clip;
             videoPlayer.Play();
             Debug.Log($"播放階段 {index} 影片：{clip.name}");
+            Invoke(nameof(ShowVideo), showVideoDelay);
             Invoke(nameof(HideVideo), (float)clip.length);
             Invoke(nameof(UnlockInput), (float)clip.length);
 
@@ -106,12 +116,11 @@ public class VolumeGameController : MonoBehaviour
     void PlayFinalVideo()
     {
         isLocked = true;
-        videoImage.color = Color.white;
         videoPlayer.Stop();
         videoPlayer.clip = clipFinal;
         videoPlayer.Play();
         Debug.Log("三階段完成，播放最終影片！");
-
+        Invoke(nameof(ShowVideo), showVideoDelay);
         Invoke(nameof(ResetStage), (float)clipFinal.length + 0.1f);
     }
 
@@ -125,11 +134,20 @@ public class VolumeGameController : MonoBehaviour
         videoImage.color = Color.black;
         Debug.Log("影片播放結束，畫面變黑");
     }
+    void ShowVideo()
+    {
+        videoImage.color = Color.white;
+        Debug.Log("影片播放開始，畫面變白");
+    }
     void ResetStage()
     {
         currentIndex = 0;
         isLocked = false;
         videoImage.color = Color.black;
         Debug.Log("重置進度：currentIndex = 0，isLocked = false");
+    }
+    public void OnToleranceValueChange()
+    {
+        toleranceValue.text = toleranceSlider.value.ToString();
     }
 }

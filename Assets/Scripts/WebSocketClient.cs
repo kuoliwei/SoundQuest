@@ -3,14 +3,16 @@ using System.Threading.Tasks;
 using NativeWebSocket;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WebSocketClient : MonoBehaviour
 {
     public static WebSocketClient Instance { get; private set; }
 
-    [SerializeField] private string serverUrl = "ws://localhost:8080";
+    [SerializeField] private string serverUrl = "ws://192.168.50.25:8765";
+    [SerializeField] private InputField webSocketUrlInputField;
     private WebSocket websocket;
-
+    private bool isConnecting = false;
     public event Action<string> OnMessageReceived;
 
     private bool shouldReconnect = true;
@@ -18,6 +20,7 @@ public class WebSocketClient : MonoBehaviour
 
     void Awake()
     {
+        webSocketUrlInputField.text = serverUrl;
         if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
@@ -43,25 +46,42 @@ public class WebSocketClient : MonoBehaviour
     }
     async void Connect()
     {
-        websocket = new WebSocket(serverUrl);
+        if (websocket != null && websocket.State == WebSocketState.Connecting || isConnecting)
+        {
+            Debug.LogWarning("正在連線中，忽略此次 Connect()");
+            return;
+        }
 
-        websocket.OnOpen += () => Debug.Log("WebSocket Connected");
+        isConnecting = true;
+
+        websocket = new WebSocket(webSocketUrlInputField.text);
+
+        websocket.OnOpen += () =>
+        {
+            Debug.Log("WebSocket Connected");
+            isConnecting = false;
+        };
+
         websocket.OnClose += (e) =>
         {
             Debug.LogWarning("WebSocket Closed. 將於幾秒後嘗試重連...");
+            isConnecting = false;
             if (shouldReconnect)
             {
                 Invoke(nameof(AttemptReconnect), reconnectDelay);
             }
         };
+
         websocket.OnError += (e) =>
         {
             Debug.LogError("WebSocket Error: " + e);
+            isConnecting = false;
             if (shouldReconnect)
             {
                 Invoke(nameof(AttemptReconnect), reconnectDelay);
             }
         };
+
         websocket.OnMessage += (bytes) =>
         {
             string message = System.Text.Encoding.UTF8.GetString(bytes);
@@ -75,6 +95,7 @@ public class WebSocketClient : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogWarning("連線失敗：" + ex.Message);
+            isConnecting = false;
             if (shouldReconnect)
             {
                 Invoke(nameof(AttemptReconnect), reconnectDelay);
@@ -84,6 +105,12 @@ public class WebSocketClient : MonoBehaviour
 
     void AttemptReconnect()
     {
+        if (websocket != null && websocket.State == WebSocketState.Open)
+        {
+            Debug.Log("已連線，不需重新連線");
+            return;
+        }
+
         Debug.Log("嘗試重新連線...");
         Connect();
     }
@@ -103,17 +130,17 @@ public class WebSocketClient : MonoBehaviour
 #if !UNITY_WEBGL || UNITY_EDITOR
         websocket?.DispatchMessageQueue();
 #endif
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Debug.Log("按下 1：送出 mode: 6");
-            SendJson(new Mode { mode = "6" });
-        }
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    Debug.Log("按下 1：送出 mode: 6");
+        //    SendJson(new Mode { mode = "6" });
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            Debug.Log("按下 6：送出 mode: 16");
-            SendJson(new Mode { mode = "16" });
-        }
+        //if (Input.GetKeyDown(KeyCode.Alpha6))
+        //{
+        //    Debug.Log("按下 6：送出 mode: 16");
+        //    SendJson(new Mode { mode = "16" });
+        //}
     }
 
     async void OnApplicationQuit()

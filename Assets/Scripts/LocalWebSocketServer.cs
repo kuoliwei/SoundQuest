@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -5,16 +6,17 @@ using WebSocketSharp.Server;
 public class LocalWebSocketServer : MonoBehaviour
 {
     private WebSocketServer wssv;
+    [SerializeField] int port;
 
     void Start()
     {
-        wssv = new WebSocketServer(8080); // ws://localhost:8080
+        wssv = new WebSocketServer(port);
 
         wssv.AddWebSocketService<TestService>("/");
 
         wssv.Start();
 
-        Debug.Log("Local WebSocket server started at ws://localhost:8080");
+        Debug.Log($"Local WebSocket server started at ws://localhost:{port}");
     }
 
     void OnApplicationQuit()

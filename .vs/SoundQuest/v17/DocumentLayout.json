@@ -1,0 +1,103 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\UnityProject\\SoundQuest\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|D:\\UnityProject\\SoundQuest\\assets\\scripts\\volumegamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\volumegamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|d:\\unityproject\\soundquest\\assets\\scripts\\pitchgamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\pitchgamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|D:\\UnityProject\\SoundQuest\\assets\\scripts\\scenedisplaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\scenedisplaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|D:\\UnityProject\\SoundQuest\\assets\\scripts\\websocketclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\websocketclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|D:\\UnityProject\\SoundQuest\\assets\\scripts\\localwebsocketserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\localwebsocketserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PitchGameController.cs",
+              "DocumentMoniker": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\PitchGameController.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\PitchGameController.cs",
+              "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\PitchGameController.cs",
+              "RelativeToolTip": "Assets\\Scripts\\PitchGameController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-11T09:07:59.6Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "VolumeGameController.cs",
+              "DocumentMoniker": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\VolumeGameController.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\VolumeGameController.cs",
+              "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\VolumeGameController.cs",
+              "RelativeToolTip": "Assets\\Scripts\\VolumeGameController.cs",
+              "ViewState": "AgIAAIAAAAAAAAAAAAAswIoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-11T09:07:48.15Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SceneDisplayController.cs",
+              "DocumentMoniker": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\SceneDisplayController.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\SceneDisplayController.cs",
+              "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\SceneDisplayController.cs",
+              "RelativeToolTip": "Assets\\Scripts\\SceneDisplayController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-11T09:07:42.256Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "LocalWebSocketServer.cs",
+              "DocumentMoniker": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\LocalWebSocketServer.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\LocalWebSocketServer.cs",
+              "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\LocalWebSocketServer.cs",
+              "RelativeToolTip": "Assets\\Scripts\\LocalWebSocketServer.cs",
+              "ViewState": "AgIAADoAAAAAAAAAAAAkwF0AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-11T02:40:36.933Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "WebSocketClient.cs",
+              "DocumentMoniker": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\WebSocketClient.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\WebSocketClient.cs",
+              "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\WebSocketClient.cs",
+              "RelativeToolTip": "Assets\\Scripts\\WebSocketClient.cs",
+              "ViewState": "AgIAAH4AAAAAAAAAAAAkwI4AAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-11T02:39:42.817Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
