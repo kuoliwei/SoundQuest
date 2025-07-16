@@ -3,24 +3,24 @@
   "WorkspaceRootPath": "D:\\UnityProject\\SoundQuest\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|D:\\UnityProject\\SoundQuest\\assets\\scripts\\websocketclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\websocketclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|d:\\unityproject\\soundquest\\assets\\scripts\\volumegamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\volumegamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|D:\\UnityProject\\SoundQuest\\assets\\scripts\\pitchgamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\pitchgamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|D:\\UnityProject\\SoundQuest\\assets\\scripts\\scenedisplaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\scenedisplaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|D:\\UnityProject\\SoundQuest\\assets\\scripts\\localwebsocketserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\localwebsocketserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|d:\\unityproject\\soundquest\\assets\\scripts\\websocketclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\websocketclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|D:\\UnityProject\\SoundQuest\\assets\\scripts\\volumegamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\volumegamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|D:\\UnityProject\\SoundQuest\\assets\\scripts\\scenedisplaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3302C44A-EA33-7E71-F4CC-46FE5215AFD5}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\scenedisplaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,37 +30,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "PitchGameController.cs",
               "DocumentMoniker": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\PitchGameController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PitchGameController.cs",
               "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\PitchGameController.cs",
               "RelativeToolTip": "Assets\\Scripts\\PitchGameController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHoAAAA8AAAAAAAAAA==",
+              "ViewState": "AgIAAIAAAAAAAAAAAAAmwI0AAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-11T09:07:59.6Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "VolumeGameController.cs",
               "DocumentMoniker": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\VolumeGameController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\VolumeGameController.cs",
               "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\VolumeGameController.cs",
               "RelativeToolTip": "Assets\\Scripts\\VolumeGameController.cs",
-              "ViewState": "AgIAAE0AAAAAAAAAAAAgwFgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAJQAAAAAAAAAAADwv6IAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-11T09:07:48.15Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "SceneDisplayController.cs",
               "DocumentMoniker": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\SceneDisplayController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\SceneDisplayController.cs",
@@ -68,31 +68,30 @@
               "RelativeToolTip": "Assets\\Scripts\\SceneDisplayController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-11T09:07:42.256Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-11T09:07:42.256Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "LocalWebSocketServer.cs",
               "DocumentMoniker": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\LocalWebSocketServer.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\LocalWebSocketServer.cs",
               "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\LocalWebSocketServer.cs",
               "RelativeToolTip": "Assets\\Scripts\\LocalWebSocketServer.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAD0AAAAAAAAAAAAkwEIAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-11T02:40:36.933Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "WebSocketClient.cs",
               "DocumentMoniker": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\WebSocketClient.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\WebSocketClient.cs",
               "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\WebSocketClient.cs",
               "RelativeToolTip": "Assets\\Scripts\\WebSocketClient.cs",
-              "ViewState": "AgIAAFkAAAAAAAAAAAAswD4AAAAwAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAAA1wIwAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-11T02:39:42.817Z",
               "EditorCaption": ""

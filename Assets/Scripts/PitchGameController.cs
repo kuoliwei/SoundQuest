@@ -124,4 +124,24 @@ public class PitchGameController : MonoBehaviour
         currentIndex = 0;
         isLocked = false;
     }
+    public void TriggerDo()
+    {
+        string json = JsonUtility.ToJson(new Pitch { solfege = "Do" });
+        HandleMessage(json);
+    }
+    public void TriggerRe()
+    {
+        string json = JsonUtility.ToJson(new Pitch { solfege = "Re" });
+        HandleMessage(json);
+    }
+    public void TriggerMi()
+    {
+        string json = JsonUtility.ToJson(new Pitch { solfege = "Mi" });
+        HandleMessage(json);
+    }
+    public void TriggerSo()
+    {
+        string json = JsonUtility.ToJson(new Pitch { solfege = "So" });
+        HandleMessage(json);
+    }
 }
