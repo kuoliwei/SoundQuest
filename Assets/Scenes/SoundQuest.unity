@@ -311,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a60dec4331199c48b8ecc580d43f10a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverUrl: ws://localhost:8765
+  serverUrl: ws://140.92.141.175:8765
   webSocketUrlInputField: {fileID: 1401823682}
   console: {fileID: 1298080535}
 --- !u!4 &67640739

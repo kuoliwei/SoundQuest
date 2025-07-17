@@ -73,7 +73,7 @@ public class LocalWebSocketServer : MonoBehaviour
             SendJson(new Pitch { solfege = "Mi" });
 
         if (Input.GetKeyDown(KeyCode.S))
-            SendJson(new Pitch { solfege = "So" });
+            SendJson(new Pitch { solfege = "Sol" });
 
         if (Input.GetKeyDown(KeyCode.Alpha5))
             SendJson(new Volume { dB = "50" });

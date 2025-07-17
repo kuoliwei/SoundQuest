@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\PitchGameController.cs",
               "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\PitchGameController.cs",
               "RelativeToolTip": "Assets\\Scripts\\PitchGameController.cs",
-              "ViewState": "AgIAAIAAAAAAAAAAAAAmwI0AAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAgwGQAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-11T09:07:59.6Z",
               "EditorCaption": ""
@@ -53,7 +53,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\VolumeGameController.cs",
               "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\VolumeGameController.cs",
               "RelativeToolTip": "Assets\\Scripts\\VolumeGameController.cs",
-              "ViewState": "AgIAAJQAAAAAAAAAAADwv6IAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKIAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-11T09:07:48.15Z",
               "EditorCaption": ""
@@ -68,7 +68,8 @@
               "RelativeToolTip": "Assets\\Scripts\\SceneDisplayController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-11T09:07:42.256Z"
+              "WhenOpened": "2025-07-11T09:07:42.256Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -78,7 +79,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\LocalWebSocketServer.cs",
               "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\LocalWebSocketServer.cs",
               "RelativeToolTip": "Assets\\Scripts\\LocalWebSocketServer.cs",
-              "ViewState": "AgIAAD0AAAAAAAAAAAAkwEIAAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAAFYAAAAAAAAAAAA9wEsAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-11T02:40:36.933Z",
               "EditorCaption": ""
@@ -91,7 +92,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\WebSocketClient.cs",
               "ToolTip": "D:\\UnityProject\\SoundQuest\\Assets\\Scripts\\WebSocketClient.cs",
               "RelativeToolTip": "Assets\\Scripts\\WebSocketClient.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAA1wIwAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAC8AAAAAAAAAAAA9wDUAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-11T02:39:42.817Z",
               "EditorCaption": ""

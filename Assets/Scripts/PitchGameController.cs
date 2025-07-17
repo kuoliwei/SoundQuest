@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PitchGameController : MonoBehaviour
 {
-    private readonly string[] expectedNotes = { "Do", "Re", "Mi", "So" };
+    private readonly string[] expectedNotes = { "Do", "Re", "Mi", "Sol" };
     private int currentIndex = 0;
     private bool isLocked = false;
 
@@ -65,6 +65,7 @@ public class PitchGameController : MonoBehaviour
 
         if (msg.solfege == expected)
         {
+            console.text = $"收到 {msg.solfege}，當前關卡應該是 {expected}，通過";
             PlayNoteAudio(msg.solfege);
             currentIndex++;
         }
@@ -96,8 +97,8 @@ public class PitchGameController : MonoBehaviour
                 audioSource.PlayOneShot(miClip);
                 Invoke(nameof(UnlockInput), miClip.length);
                 break;
-            case "So":
-                Debug.Log("播放音效：So");
+            case "Sol":
+                Debug.Log("播放音效：Sol");
                 audioSource.PlayOneShot(soClip);
                 Invoke(nameof(UnlockInput), soClip.length);
 
@@ -141,7 +142,7 @@ public class PitchGameController : MonoBehaviour
     }
     public void TriggerSo()
     {
-        string json = JsonUtility.ToJson(new Pitch { solfege = "So" });
+        string json = JsonUtility.ToJson(new Pitch { solfege = "Sol" });
         HandleMessage(json);
     }
 }
