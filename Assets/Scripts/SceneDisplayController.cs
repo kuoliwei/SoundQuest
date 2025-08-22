@@ -22,14 +22,14 @@ public class SceneDisplayController : MonoBehaviour
 
     public void SwitchToPitch()
     {
-        WebSocketClient.Instance.SendJson(new Mode { mode = "6" });
+        WebSocketClient.Instance.SendJson(new Mode { mode = "solfege" });
         pitchDisplayCanvas.SetActive(true);
         volumeDisplayCanvas.SetActive(false);
     }
 
     public void SwitchToVolume()
     {
-        WebSocketClient.Instance.SendJson(new Mode { mode = "16" });
+        WebSocketClient.Instance.SendJson(new Mode { mode = "db" });
         pitchDisplayCanvas.SetActive(false);
         volumeDisplayCanvas.SetActive(true);
     }

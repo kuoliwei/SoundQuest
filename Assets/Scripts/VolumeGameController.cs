@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using static ParticleController;
 
 public class VolumeGameController : MonoBehaviour
 {
@@ -22,9 +23,26 @@ public class VolumeGameController : MonoBehaviour
     [SerializeField] Text weightValue;
 
     [SerializeField] Text console;
+    [SerializeField] Text dbValue;
     private int currentIndex = 0;
     private bool isLocked = false;
     [SerializeField] float showVideoDelay;
+
+    // VolumeGameController.cs 片段：新增欄位
+    [SerializeField] ParticleController particleController;
+
+    // 目標區間（正規化模式使用）
+    [SerializeField] Vector2 sizeRange;  // 最細~最粗
+    [SerializeField] Vector2 speedRange;   // 最慢~最快
+
+    // --- 粗細/速度映射設定 ---
+    [Header("dB → 粗細/速度映射")]
+    [SerializeField] float minDb;                  // 正規化下限
+    [SerializeField] float maxDb;                 // 正規化上限
+
+    [Header("關卡通過條件")]
+    [SerializeField] private int requiredSuccessCount;  // 需要連續幾次正確才算過關
+    private int successCount = 0;                           // 當前連續正確次數
 
     void OnEnable()
     {
@@ -33,7 +51,6 @@ public class VolumeGameController : MonoBehaviour
         OnToleranceValueChange();
         if (WebSocketClient.Instance != null)
             WebSocketClient.Instance.OnMessageReceived += HandleMessage;
-
         ResetStage();
     }
 
@@ -42,7 +59,11 @@ public class VolumeGameController : MonoBehaviour
         if (WebSocketClient.Instance != null)
             WebSocketClient.Instance.OnMessageReceived -= HandleMessage;
     }
-
+    void DisplayDbValue(float dB, Color color)
+    {
+        dbValue.color = color;
+        dbValue.text = ((int)dB).ToString();
+    }
     void HandleMessage(string json)
     {
         if (isLocked)
@@ -76,17 +97,35 @@ public class VolumeGameController : MonoBehaviour
         int expected = expectedVolumes[currentIndex];
 
         float dBAfterWeight = dB * weightSlider.value;
+        DisplayDbValue(dBAfterWeight, particleController.CurrentColor);
+        float t = Mathf.Clamp01(Mathf.InverseLerp(minDb, maxDb, dBAfterWeight));
+        float size = Mathf.Lerp(sizeRange.x, sizeRange.y, t);
+        float speed = Mathf.Lerp(speedRange.x, speedRange.y, t);
+        particleController.SetTrailWidthAbs(size);
+        particleController.SetTrailSpeedAbs(speed);
+
         if (Mathf.Abs(dBAfterWeight - expected) <= toleranceSlider.value)
         {
-            Debug.Log($"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB");
-            console.text = $"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB";
-            PlayStageVideo(currentIndex);
-            currentIndex++;
+            successCount++;
+            if (successCount >= requiredSuccessCount)
+            {
+                Debug.Log($"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確，通過");
+                console.text = $"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確，通過";
+                PlayStageVideo(currentIndex);
+                currentIndex++;
+                successCount = 0; // 重置下一關重新計算
+            }
+            else
+            {
+                Debug.Log($"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確");
+                console.text = $"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確";
+            }
         }
         else
         {
             Debug.Log($"收到 dB={dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略");
             console.text = $"收到 dB={dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略";
+            successCount = 0;
         }
     }
 
@@ -112,10 +151,16 @@ public class VolumeGameController : MonoBehaviour
             Invoke(nameof(HideVideo), (float)clip.length);
             Invoke(nameof(UnlockInput), (float)clip.length);
 
-            // 如果是最後階段，等播放完才播放完成影片
+            //// 如果是最後階段，等播放完才播放完成影片
+            //if (index == expectedVolumes.Length - 1)
+            //{
+            //    Invoke(nameof(PlayFinalVideo), (float)clip.length + 0.1f);
+            //}
+
+            // 如果不播最後影片
             if (index == expectedVolumes.Length - 1)
             {
-                Invoke(nameof(PlayFinalVideo), (float)clip.length + 0.1f);
+                Invoke(nameof(ResetStage), (float)clip.length + 0.1f);
             }
         }
     }
@@ -139,18 +184,30 @@ public class VolumeGameController : MonoBehaviour
     void HideVideo()
     {
         videoImage.color = Color.black;
+        if(currentIndex <= 2)
+        {
+            particleController.ResumeEmission();
+            dbValue.gameObject.SetActive(true);
+            particleController.SetEmissionColor((ParticleController.EmissionColor)currentIndex);
+        }
         Debug.Log("影片播放結束，畫面變黑");
     }
     void ShowVideo()
     {
         videoImage.color = Color.white;
+        particleController.PauseEmission();
+        dbValue.gameObject.SetActive(false);
         Debug.Log("影片播放開始，畫面變白");
     }
     void ResetStage()
     {
         currentIndex = 0;
+        successCount = 0;   // 也要歸零
         isLocked = false;
         videoImage.color = Color.black;
+        particleController.ResumeEmission();
+        dbValue.gameObject.SetActive(true);
+        particleController.SetEmissionColor((ParticleController.EmissionColor)currentIndex);
         Debug.Log("重置進度：currentIndex = 0，isLocked = false");
     }
     public void OnToleranceValueChange()

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PitchGameController : MonoBehaviour
 {
-    private readonly string[] expectedNotes = { "Do", "Re", "Mi", "Sol" };
+    private readonly string[] expectedNotes = { "Do", "Mi", "Fa", "Sol" };
     private int currentIndex = 0;
     private bool isLocked = false;
 
@@ -13,8 +13,8 @@ public class PitchGameController : MonoBehaviour
     [Header("音效設定")]
     public AudioSource audioSource;
     public AudioClip doClip;
-    public AudioClip reClip;
     public AudioClip miClip;
+    public AudioClip faClip;
     public AudioClip soClip;
     public AudioClip finishClip;
 
@@ -87,15 +87,15 @@ public class PitchGameController : MonoBehaviour
                 audioSource.PlayOneShot(doClip);
                 Invoke(nameof(UnlockInput), doClip.length);
                 break;
-            case "Re":
-                Debug.Log("播放音效：Re");
-                audioSource.PlayOneShot(reClip);
-                Invoke(nameof(UnlockInput), reClip.length);
-                break;
             case "Mi":
                 Debug.Log("播放音效：Mi");
                 audioSource.PlayOneShot(miClip);
                 Invoke(nameof(UnlockInput), miClip.length);
+                break;
+            case "Fa":
+                Debug.Log("播放音效：Fa");
+                audioSource.PlayOneShot(faClip);
+                Invoke(nameof(UnlockInput), faClip.length);
                 break;
             case "Sol":
                 Debug.Log("播放音效：Sol");
@@ -130,14 +130,14 @@ public class PitchGameController : MonoBehaviour
         string json = JsonUtility.ToJson(new Pitch { solfege = "Do" });
         HandleMessage(json);
     }
-    public void TriggerRe()
-    {
-        string json = JsonUtility.ToJson(new Pitch { solfege = "Re" });
-        HandleMessage(json);
-    }
     public void TriggerMi()
     {
         string json = JsonUtility.ToJson(new Pitch { solfege = "Mi" });
+        HandleMessage(json);
+    }
+    public void TriggerFa()
+    {
+        string json = JsonUtility.ToJson(new Pitch { solfege = "Fa" });
         HandleMessage(json);
     }
     public void TriggerSo()

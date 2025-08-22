@@ -9,19 +9,25 @@ public class WebSocketClient : MonoBehaviour
 {
     public static WebSocketClient Instance { get; private set; }
 
-    [SerializeField] private string serverUrl = "ws://192.168.50.25:8765";
+    [SerializeField] private string serverUrl = "ws://127.0.0.1:8765";
     [SerializeField] private InputField webSocketUrlInputField;
     [SerializeField] Text console;
+    [SerializeField] Text fullJsonContent;
+    [SerializeField] Text jsonDataParse;
     private WebSocket websocket;
     private bool isConnecting = false;
     public event Action<string> OnMessageReceived;
 
     private bool shouldReconnect = true;
     private float reconnectDelay = 5f;
-
+    private int jsonDataCount = 0;
     void Awake()
     {
         webSocketUrlInputField.text = serverUrl;
+        //webSocketUrlInputField.text = "ws://192.168.50.25:8765";
+        //webSocketUrlInputField.text = "ws://10.66.66.51:8765";
+        webSocketUrlInputField.text = "ws://192.168.0.139:8765";
+
         if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
@@ -137,14 +143,14 @@ public class WebSocketClient : MonoBehaviour
 #endif
         //if (Input.GetKeyDown(KeyCode.Alpha1))
         //{
-        //    Debug.Log("按下 1：送出 mode: 6");
-        //    SendJson(new Mode { mode = "6" });
+        //    Debug.Log("按下 1：送出 mode: solfege");
+        //    SendJson(new Mode { mode = "solfege" });
         //}
 
         //if (Input.GetKeyDown(KeyCode.Alpha6))
         //{
-        //    Debug.Log("按下 6：送出 mode: 16");
-        //    SendJson(new Mode { mode = "16" });
+        //    Debug.Log("按下 6：送出 mode: db");
+        //    SendJson(new Mode { mode = "db" });
         //}
     }
 
@@ -154,9 +160,14 @@ public class WebSocketClient : MonoBehaviour
     }
     void TryParseAndLog(string json)
     {
+        jsonDataCount++;
+        fullJsonContent.text = $"第{jsonDataCount}筆json：\n{json}";
         try
         {
             Pitch pitch = JsonUtility.FromJson<Pitch>(json);
+            jsonDataParse.text = $"mode：{pitch.mode}\n" +
+                $"solfege：{pitch.solfege}\n" +
+                $"window_sec：{pitch.window_sec}";
             if (!string.IsNullOrEmpty(pitch.solfege))
             {
                 Debug.Log($"偵測到 Pitch：solfege = {pitch.solfege}");
@@ -168,6 +179,9 @@ public class WebSocketClient : MonoBehaviour
         try
         {
             Volume volume = JsonUtility.FromJson<Volume>(json);
+            jsonDataParse.text = $"mode：{volume.mode}\n" +
+    $"solfege：{volume.dB}\n" +
+    $"window_sec：{volume.window_sec}";
             if (!string.IsNullOrEmpty(volume.dB))
             {
                 Debug.Log($"偵測到 Volume：dB = {volume.dB}");
@@ -175,6 +189,7 @@ public class WebSocketClient : MonoBehaviour
             }
         }
         catch { }
+
 
         Debug.LogWarning("收到無法解析的 JSON：" + json);
     }

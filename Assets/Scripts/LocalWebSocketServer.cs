@@ -64,25 +64,43 @@ public class LocalWebSocketServer : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.D))
-            SendJson(new Pitch { solfege = "Do" });
-
-        if (Input.GetKeyDown(KeyCode.R))
-            SendJson(new Pitch { solfege = "Re" });
+            SendJson(new Pitch {mode = "solfege",  solfege = "Do", window_sec = "0.2"});
 
         if (Input.GetKeyDown(KeyCode.M))
-            SendJson(new Pitch { solfege = "Mi" });
+            SendJson(new Pitch { mode = "solfege", solfege = "Mi", window_sec = "0.2" });
+
+        if (Input.GetKeyDown(KeyCode.F))
+            SendJson(new Pitch { mode = "solfege", solfege = "Fa", window_sec = "0.2" });
 
         if (Input.GetKeyDown(KeyCode.S))
-            SendJson(new Pitch { solfege = "Sol" });
+            SendJson(new Pitch { mode = "solfege", solfege = "Sol", window_sec = "0.2" });
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            SendJson(new Volume { mode = "dB", dB = "10", window_sec = "0.2" });
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            SendJson(new Volume { mode = "dB", dB = "20", window_sec = "0.2" });
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            SendJson(new Volume { mode = "dB", dB = "30", window_sec = "0.2" });
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            SendJson(new Volume { mode = "dB", dB = "40", window_sec = "0.2" });
 
         if (Input.GetKeyDown(KeyCode.Alpha5))
-            SendJson(new Volume { dB = "50" });
+            SendJson(new Volume { mode = "dB", dB = "50", window_sec = "0.2" });
+
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+            SendJson(new Volume { mode = "dB", dB = "60", window_sec = "0.2" });
 
         if (Input.GetKeyDown(KeyCode.Alpha7))
-            SendJson(new Volume { dB = "70" });
+            SendJson(new Volume { mode = "dB", dB = "70", window_sec = "0.2" });
+
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+            SendJson(new Volume { mode = "dB", dB = "80", window_sec = "0.2" });
 
         if (Input.GetKeyDown(KeyCode.Alpha9))
-            SendJson(new Volume { dB = "90" });
+            SendJson(new Volume { mode = "dB", dB = "90", window_sec = "0.2" });
     }
     void SendJson<T>(T obj)
     {
