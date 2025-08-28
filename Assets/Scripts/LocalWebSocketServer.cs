@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 
@@ -17,7 +19,6 @@ public class LocalWebSocketServer : MonoBehaviour
 
         Debug.Log($"Local WebSocket server started at ws://localhost:{port}");
     }
-
     void OnApplicationQuit()
     {
         if (wssv != null && wssv.IsListening)
@@ -32,7 +33,6 @@ public class LocalWebSocketServer : MonoBehaviour
         protected override void OnMessage(MessageEventArgs e)
         {
             Debug.Log("收到原始訊息：" + e.Data);
-
             try
             {
                 var msg = JsonUtility.FromJson<Mode>(e.Data);

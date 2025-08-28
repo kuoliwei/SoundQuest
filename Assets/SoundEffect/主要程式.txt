@@ -1,0 +1,8 @@
+if (audioEffectController != null)
+                    {
+                        if (audioData != null)
+                        {
+                            audioEffectController.UpdateWaveform(audioData);
+                        }
+                        audioEffectController.SetVolume(vol);
+                    }

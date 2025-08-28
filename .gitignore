@@ -55,3 +55,36 @@ desktop.ini
 
 # Visual Studio workfile
 .vs/UserSettings/
+
+# =========================
+# Added for Unity + VS setup
+# =========================
+
+# Visual Studio temporary files
+.vs/
+*.vsidx
+*.db
+
+# Unity user-specific settings
+UserSettings/
+
+# Unity auto-generated files (layouts, logs, etc.)
+*.dwlt
+*.dwlb
+*.swp
+
+# IDE settings
+.idea/
+.vscode/
+
+# Rider
+*.iml
+
+# Unity build artifacts
+[Ll]ibrary/
+[Tt]emp/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+

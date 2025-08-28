@@ -8,10 +8,11 @@ public class ParticleController : MonoBehaviour
     private Material mat;
 
     // 三種顏色
-    public enum EmissionColor { crimson, green, cyanBlue }
+    public enum EmissionColor { crimson, gold, green }
     private readonly Color crimson = new Color(0.86f, 0.08f, 0.24f);   // 血紅色
+    private readonly Color gold = new Color(1f, 0.843f, 0f);
     private readonly Color green = new Color(0.2f, 1f, 0.2f);          // 翠綠色
-    private readonly Color cyanBlue = new Color(0f, 0.17f, 0.75f);     // 青藍色
+    //private readonly Color cyanBlue = new Color(0f, 0.17f, 0.75f);     // 青藍色
     private Color currentColor;
     [HideInInspector] public Color CurrentColor => currentColor;
     private ParticleSystem.MainModule mainModule;
@@ -70,11 +71,11 @@ public class ParticleController : MonoBehaviour
             case EmissionColor.crimson:
                 color = crimson; 
                 break;
+            case EmissionColor.gold:
+                color = gold;
+                break;
             case EmissionColor.green:
                 color = green;
-                break;
-            case EmissionColor.cyanBlue:
-                color = cyanBlue;
                 break;
         }
         currentColor = color * intensity;

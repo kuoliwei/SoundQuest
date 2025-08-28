@@ -9,7 +9,8 @@ public class WebSocketClient : MonoBehaviour
 {
     public static WebSocketClient Instance { get; private set; }
 
-    [SerializeField] private string serverUrl = "ws://127.0.0.1:8765";
+    [SerializeField] private string serverUrl = "ws://localhost:8765";// "ws://192.168.50.242:8765";
+
     [SerializeField] private InputField webSocketUrlInputField;
     [SerializeField] Text console;
     [SerializeField] Text fullJsonContent;
@@ -26,7 +27,7 @@ public class WebSocketClient : MonoBehaviour
         webSocketUrlInputField.text = serverUrl;
         //webSocketUrlInputField.text = "ws://192.168.50.25:8765";
         //webSocketUrlInputField.text = "ws://10.66.66.51:8765";
-        webSocketUrlInputField.text = "ws://192.168.0.139:8765";
+        //webSocketUrlInputField.text = "ws://192.168.0.139:8765";
 
         if (Instance != null && Instance != this)
         {

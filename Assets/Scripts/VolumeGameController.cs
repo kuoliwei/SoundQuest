@@ -9,12 +9,12 @@ public class VolumeGameController : MonoBehaviour
     [Header("影片播放")]
     public RawImage videoImage;
     public VideoPlayer videoPlayer;
-    public VideoClip clip50;
     public VideoClip clip70;
     public VideoClip clip90;
+    public VideoClip clip110;
     public VideoClip clipFinal;
 
-    private readonly int[] expectedVolumes = { 50, 70, 90 };
+    private readonly int[] expectedVolumes = { 70, 90, 110 };
     [Range(0f, 10f)] [SerializeField] float tolerance;
     [SerializeField] Slider toleranceSlider;
     [SerializeField] Text toleranceValue;
@@ -43,6 +43,11 @@ public class VolumeGameController : MonoBehaviour
     [Header("關卡通過條件")]
     [SerializeField] private int requiredSuccessCount;  // 需要連續幾次正確才算過關
     private int successCount = 0;                           // 當前連續正確次數
+
+    [Header("流程設定")]
+    [SerializeField] private bool restartAfterFinal = false;
+    // 勾選：最終影片播畢後重頭開始；不勾：播畢後關閉關卡（全黑無特效）
+
 
     void OnEnable()
     {
@@ -135,9 +140,9 @@ public class VolumeGameController : MonoBehaviour
 
         VideoClip clip = index switch
         {
-            0 => clip50,
-            1 => clip70,
-            2 => clip90,
+            0 => clip70,
+            1 => clip90,
+            2 => clip110,
             _ => null
         };
 
@@ -151,17 +156,17 @@ public class VolumeGameController : MonoBehaviour
             Invoke(nameof(HideVideo), (float)clip.length);
             Invoke(nameof(UnlockInput), (float)clip.length);
 
-            //// 如果是最後階段，等播放完才播放完成影片
-            //if (index == expectedVolumes.Length - 1)
-            //{
-            //    Invoke(nameof(PlayFinalVideo), (float)clip.length + 0.1f);
-            //}
-
-            // 如果不播最後影片
+            // 如果要撥放最後影片，最後階段，等播放完最後關卡影片才播放最後影片
             if (index == expectedVolumes.Length - 1)
             {
-                Invoke(nameof(ResetStage), (float)clip.length + 0.1f);
+                Invoke(nameof(PlayFinalVideo), (float)clip.length + 0.1f);
             }
+
+            //// 如果不播最後影片
+            //if (index == expectedVolumes.Length - 1)
+            //{
+            //    Invoke(nameof(ResetStage), (float)clip.length + 0.1f);
+            //}
         }
     }
 
@@ -173,7 +178,20 @@ public class VolumeGameController : MonoBehaviour
         videoPlayer.Play();
         Debug.Log("三階段完成，播放最終影片！");
         Invoke(nameof(ShowVideo), showVideoDelay);
-        Invoke(nameof(ResetStage), (float)clipFinal.length + 0.1f);
+        //Invoke(nameof(ResetStage), (float)clipFinal.length + 0.1f);
+
+        // 影片播完之後：依設定決定 Reset 或 Close
+        float endAt = (float)clipFinal.length + 0.05f;
+        if (restartAfterFinal)
+        {
+            // 重頭開始：回到初始狀態（會恢復粒子、顯示 dB 等）
+            Invoke(nameof(ResetStage), endAt);
+        }
+        else
+        {
+            // 關閉關卡：全黑無特效 & 鎖住輸入
+            Invoke(nameof(CloseStage), endAt);
+        }
     }
 
     void UnlockInput()
@@ -199,6 +217,48 @@ public class VolumeGameController : MonoBehaviour
         dbValue.gameObject.SetActive(false);
         Debug.Log("影片播放開始，畫面變白");
     }
+    /// <summary>
+    /// 關閉關卡：畫面全黑、停止影片畫面、關閉粒子/特效、隱藏數值顯示，並鎖住輸入。
+    /// </summary>
+    public void CloseStage()
+    {
+        // 停掉未來可能的排程（避免殘留 Invoke 導致又被喚起 Show/Hide）
+        CancelInvoke();
+
+        // 鎖住輸入，避免後續又吃到訊息
+        isLocked = true;
+
+        // 視覺：全黑、停止影片
+        if (videoPlayer != null)
+        {
+            videoPlayer.Stop();
+            videoPlayer.clip = null; // 可選：清空 clip，保證完全靜默
+        }
+        if (videoImage != null)
+        {
+            videoImage.color = Color.black;
+        }
+
+        // 特效：完全關閉（這裡用 Pause 代表停止發射 & 不顯示）
+        if (particleController != null)
+        {
+            particleController.PauseEmission();
+        }
+
+        // UI 顯示：隱藏 dB
+        if (dbValue != null)
+        {
+            dbValue.gameObject.SetActive(false);
+        }
+
+        // 記錄狀態
+        Debug.Log("[CloseStage] 已關閉關卡：畫面全黑、無特效、輸入鎖定");
+        if (console != null)
+        {
+            console.text = "關卡已結束（畫面全黑，無特效）";
+        }
+    }
+
     void ResetStage()
     {
         currentIndex = 0;

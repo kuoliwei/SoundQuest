@@ -117,7 +117,7 @@ public class PitchGameController : MonoBehaviour
         Debug.Log("所有音階正確完成，播放完成音效");
         audioSource.PlayOneShot(finishClip);
         // 等完成音效播完後再重設關卡
-        Invoke(nameof(ResetStage), finishClip.length);
+        //Invoke(nameof(ResetStage), finishClip.length);
     }
     void ResetStage()
     {
