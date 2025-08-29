@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundEffectTest : MonoBehaviour
+public class SoundEffectManager : MonoBehaviour
 {
     public AudioEffectController audioEffectController;
-    [Range(0f, 1f)][SerializeField] float volume = 0.5f;
-    [Range(0f, 1f)][SerializeField] float amplitude = 0.1f;
+    [Range(0f, 1f)][SerializeField] float volume = 0f;
+    [Range(0f, 2f)][SerializeField] float amplitude = 0f;
     [Range(1f, 5f)][SerializeField] float frequency = 2.5f;
     public int SAMPLE_COUNT = 256; // 固定 256 筆
     private float phase; // 以「弧度」作為相位
@@ -14,6 +14,30 @@ public class SoundEffectTest : MonoBehaviour
     void Start()
     {
         
+    }
+    public void SetAmplitude(float dB)
+    {
+        // dB 例如 70、90、110… -> amplitude = dB/100
+        // 你的 amplitude Range 是 [0, 2]，這裡做安全夾限
+        amplitude = Mathf.Clamp(dB / 100f, 0f, 2f);
+
+        // volume 也一併對應到 0..1，用來驅動顏色（EnhancedGridWaveformVisualizer 會依 volume 染色）
+        volume = Mathf.Clamp(dB / 100f, 0f, 2f);
+    }
+
+    // === 新增：顯示/隱藏波形特效（取代粒子效果的 Pause/Resume） ===
+    public void PauseEmission()
+    {
+        if (audioEffectController != null)
+            audioEffectController.gameObject.SetActive(false);
+        Debug.Log("[SoundEffectManager] 音波特效已暫停");
+    }
+
+    public void ResumeEmission()
+    {
+        if (audioEffectController != null)
+            audioEffectController.gameObject.SetActive(true);
+        Debug.Log("[SoundEffectManager] 音波特效已恢復");
     }
     List<float> CreatSample(float amplitude, float frequency)
     {

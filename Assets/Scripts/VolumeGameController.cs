@@ -28,8 +28,11 @@ public class VolumeGameController : MonoBehaviour
     private bool isLocked = false;
     [SerializeField] float showVideoDelay;
 
+    //// VolumeGameController.cs 片段：新增欄位
+    //[SerializeField] ParticleController particleController;
+
     // VolumeGameController.cs 片段：新增欄位
-    [SerializeField] ParticleController particleController;
+    [SerializeField] SoundEffectManager soundEffectManager;
 
     // 目標區間（正規化模式使用）
     [SerializeField] Vector2 sizeRange;  // 最細~最粗
@@ -102,12 +105,13 @@ public class VolumeGameController : MonoBehaviour
         int expected = expectedVolumes[currentIndex];
 
         float dBAfterWeight = dB * weightSlider.value;
-        DisplayDbValue(dBAfterWeight, particleController.CurrentColor);
-        float t = Mathf.Clamp01(Mathf.InverseLerp(minDb, maxDb, dBAfterWeight));
-        float size = Mathf.Lerp(sizeRange.x, sizeRange.y, t);
-        float speed = Mathf.Lerp(speedRange.x, speedRange.y, t);
-        particleController.SetTrailWidthAbs(size);
-        particleController.SetTrailSpeedAbs(speed);
+        DisplayDbValue(dBAfterWeight, Color.white);
+        //float t = Mathf.Clamp01(Mathf.InverseLerp(minDb, maxDb, dBAfterWeight));
+        //float size = Mathf.Lerp(sizeRange.x, sizeRange.y, t);
+        //float speed = Mathf.Lerp(speedRange.x, speedRange.y, t);
+        soundEffectManager.SetAmplitude(dBAfterWeight);
+        //particleController.SetTrailWidthAbs(size);
+        //particleController.SetTrailSpeedAbs(speed);
 
         if (Mathf.Abs(dBAfterWeight - expected) <= toleranceSlider.value)
         {
@@ -156,17 +160,18 @@ public class VolumeGameController : MonoBehaviour
             Invoke(nameof(HideVideo), (float)clip.length);
             Invoke(nameof(UnlockInput), (float)clip.length);
 
-            // 如果要撥放最後影片，最後階段，等播放完最後關卡影片才播放最後影片
-            if (index == expectedVolumes.Length - 1)
-            {
-                Invoke(nameof(PlayFinalVideo), (float)clip.length + 0.1f);
-            }
-
-            //// 如果不播最後影片
+            //// 如果要撥放最後影片，最後階段，等播放完最後關卡影片才播放最後影片
             //if (index == expectedVolumes.Length - 1)
             //{
-            //    Invoke(nameof(ResetStage), (float)clip.length + 0.1f);
+            //    Invoke(nameof(PlayFinalVideo), (float)clip.length + 0.1f);
             //}
+
+            // 如果不播最後影片
+            if (index == expectedVolumes.Length - 1)
+            {
+                //Invoke(nameof(ResetStage), (float)clip.length + 0.1f);
+                Invoke(nameof(CloseStage), (float)clip.length + 0.1f);
+            }
         }
     }
 
@@ -204,16 +209,16 @@ public class VolumeGameController : MonoBehaviour
         videoImage.color = Color.black;
         if(currentIndex <= 2)
         {
-            particleController.ResumeEmission();
+            soundEffectManager.ResumeEmission();
             dbValue.gameObject.SetActive(true);
-            particleController.SetEmissionColor((ParticleController.EmissionColor)currentIndex);
+            //particleController.SetEmissionColor((ParticleController.EmissionColor)currentIndex);
         }
         Debug.Log("影片播放結束，畫面變黑");
     }
     void ShowVideo()
     {
         videoImage.color = Color.white;
-        particleController.PauseEmission();
+        soundEffectManager.PauseEmission();
         dbValue.gameObject.SetActive(false);
         Debug.Log("影片播放開始，畫面變白");
     }
@@ -240,9 +245,9 @@ public class VolumeGameController : MonoBehaviour
         }
 
         // 特效：完全關閉（這裡用 Pause 代表停止發射 & 不顯示）
-        if (particleController != null)
+        if (soundEffectManager != null)
         {
-            particleController.PauseEmission();
+            soundEffectManager.PauseEmission();
         }
 
         // UI 顯示：隱藏 dB
@@ -265,9 +270,9 @@ public class VolumeGameController : MonoBehaviour
         successCount = 0;   // 也要歸零
         isLocked = false;
         videoImage.color = Color.black;
-        particleController.ResumeEmission();
+        soundEffectManager.ResumeEmission();
         dbValue.gameObject.SetActive(true);
-        particleController.SetEmissionColor((ParticleController.EmissionColor)currentIndex);
+        //particleController.SetEmissionColor((ParticleController.EmissionColor)currentIndex);
         Debug.Log("重置進度：currentIndex = 0，isLocked = false");
     }
     public void OnToleranceValueChange()

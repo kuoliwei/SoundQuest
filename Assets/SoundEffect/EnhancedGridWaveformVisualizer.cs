@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Device;
 namespace AIStageBGApp
 {
 
@@ -56,6 +57,12 @@ namespace AIStageBGApp
         private LineRenderer topTriangleLineRenderer;
         private LineRenderer bottomTriangleLineRenderer;
 
+        // Effect Color
+        private readonly Color white = Color.white;
+        private readonly Color crimson = new Color(0.86f, 0.08f, 0.24f);   // 血紅色
+        private readonly Color gold = new Color(1f, 0.843f, 0f);
+        private readonly Color green = new Color(0.2f, 1f, 0.2f);          // 翠綠色
+        private readonly Color ceil = new Color(0.5f, 0f, 0.5f);
 
         // For glow effect
         private float glowTime = 0f;
@@ -305,7 +312,7 @@ namespace AIStageBGApp
             }
         }
 
-        private void UpdateGlowEffect()
+        private void UpdateGlowEffect() // 不做歸一化
         {
             if (!useGlowEffect || !pulseGlow)
                 return;
@@ -369,28 +376,13 @@ namespace AIStageBGApp
             if (samples == null || samples.Count == 0)
                 return;
 
-            // Find max amplitude for normalization
-            float maxAmplitude = 0.01f; // Minimum to avoid division by zero
-            for (int i = 0; i < samples.Count; i++)
-            {
-                float amplitude = Mathf.Abs(samples[i]);
-                if (amplitude > maxAmplitude)
-                {
-                    maxAmplitude = amplitude;
-                }
-            }
-
-
             for (int i = 0; i < visualizationPoints; i++)
             {
                 float xPos = (i / (float)(visualizationPoints - 1)) * visualizationWidth - (visualizationWidth / 2);
-                float crop = visualizationPoints* cropdisplay;
+                float crop = visualizationPoints * cropdisplay;
 
                 if (i < crop)
                 {
-                    
-
-                    // Get sample for this point with improved distribution
                     float value = 0;
                     int sampleIndex;
 
@@ -443,15 +435,8 @@ namespace AIStageBGApp
                             weight = 1.0f + (weight - 1.0f) * balanceStrength;
                             value *= weight;
 
-                            // Normalize if needed
-                            if (maxAmplitude > 0.01f)
-                            {
-                                value = value / maxAmplitude * visualizationHeight;
-                            }
-                            else
-                            {
-                                value *= visualizationHeight;
-                            }
+                            // 拿掉規一化，直接放大
+                            value *= visualizationHeight;
                         }
                     }
                     else
@@ -481,12 +466,135 @@ namespace AIStageBGApp
                 }
                 else
                 {
-                    targetTopPositions[i] = new Vector3(0, 0, 0); // Always positive for top
-                    targetBottomPositions[i] = new Vector3(0, 0, 0); // Inverse of top (follows waveform)
+                    targetTopPositions[i] = new Vector3(0, 0, 0);
+                    targetBottomPositions[i] = new Vector3(0, 0, 0);
                 }
-                
             }
         }
+
+        //public void UpdateVisualization(List<float> samples) // 做歸一化
+        //{
+        //    if (samples == null || samples.Count == 0)
+        //        return;
+
+        //    // Find max amplitude for normalization
+        //    float maxAmplitude = 0.01f; // Minimum to avoid division by zero
+        //    for (int i = 0; i < samples.Count; i++)
+        //    {
+        //        float amplitude = Mathf.Abs(samples[i]);
+        //        if (amplitude > maxAmplitude)
+        //        {
+        //            maxAmplitude = amplitude;
+        //        }
+        //    }
+
+
+        //    for (int i = 0; i < visualizationPoints; i++)
+        //    {
+        //        float xPos = (i / (float)(visualizationPoints - 1)) * visualizationWidth - (visualizationWidth / 2);
+        //        float crop = visualizationPoints* cropdisplay;
+
+        //        if (i < crop)
+        //        {
+                    
+
+        //            // Get sample for this point with improved distribution
+        //            float value = 0;
+        //            int sampleIndex;
+
+        //            if (balanceFrequencies)
+        //            {
+        //                // Calculate normalized position (0-1) from left to right
+        //                float position = i / (float)(visualizationPoints - 1);
+
+        //                if (useLogarithmicDistribution)
+        //                {
+        //                    // Logarithmic distribution gives more space to lower frequencies
+        //                    float logPosition = Mathf.Pow(position, 0.5f); // Square root for mild logarithmic effect
+        //                    sampleIndex = Mathf.FloorToInt(logPosition * (samples.Count - 1));
+        //                }
+        //                else
+        //                {
+        //                    // Linear distribution
+        //                    sampleIndex = Mathf.FloorToInt(position * (samples.Count - 1));
+        //                }
+
+        //                if (sampleIndex < samples.Count)
+        //                {
+        //                    // Get the raw sample value
+        //                    value = samples[sampleIndex];
+
+        //                    // Apply frequency-based weighting
+        //                    float weight = 1.0f;
+
+        //                    // Use weight curve if available
+        //                    if (frequencyWeightCurve != null && frequencyWeightCurve.length > 0)
+        //                    {
+        //                        weight = frequencyWeightCurve.Evaluate(position);
+        //                    }
+        //                    else
+        //                    {
+        //                        // Apply manual frequency balancing
+        //                        if (position < 0.3f)
+        //                        {
+        //                            // Attenuate low frequencies (left side)
+        //                            weight = Mathf.Lerp(lowFrequencyAttenuation, 1.0f, position / 0.3f);
+        //                        }
+        //                        else
+        //                        {
+        //                            // Boost high frequencies (right side)
+        //                            weight = Mathf.Lerp(1.0f, highFrequencyBoost, (position - 0.3f) / 0.7f);
+        //                        }
+        //                    }
+
+        //                    // Apply the weight with balance strength
+        //                    weight = 1.0f + (weight - 1.0f) * balanceStrength;
+        //                    value *= weight;
+
+        //                    // Normalize if needed
+        //                    if (maxAmplitude > 0.01f)
+        //                    {
+        //                        value = value / maxAmplitude * visualizationHeight;
+        //                    }
+        //                    else
+        //                    {
+        //                        value *= visualizationHeight;
+        //                    }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                // Original method - direct sample mapping
+        //                int samplesPerPoint = Mathf.Max(1, samples.Count / visualizationPoints);
+        //                sampleIndex = i * samplesPerPoint;
+
+        //                if (sampleIndex < samples.Count)
+        //                {
+        //                    // Use the raw sample value (can be positive or negative)
+        //                    value = samples[sampleIndex] * visualizationHeight;
+        //                }
+        //            }
+
+        //            // Update target positions
+        //            targetTopPositions[i] = new Vector3(xPos, Mathf.Abs(value), 0); // Always positive for top
+
+        //            if (mirrorWaveform)
+        //            {
+        //                targetBottomPositions[i] = new Vector3(xPos, -Mathf.Abs(value), 0); // Always negative for bottom (mirrored)
+        //            }
+        //            else
+        //            {
+        //                targetBottomPositions[i] = new Vector3(xPos, -value, 0); // Inverse of top (follows waveform)
+        //            }
+        //        }
+        //        else
+        //        {
+        //            targetTopPositions[i] = new Vector3(0, 0, 0); // Always positive for top
+        //            targetBottomPositions[i] = new Vector3(0, 0, 0); // Inverse of top (follows waveform)
+        //        }
+                
+        //    }
+        //}
 
         private void Update()
         {
@@ -642,23 +750,34 @@ namespace AIStageBGApp
             //    newColor = new Color(0.2f, 1f, 0.2f); // green
             //}
 
-            if (currentVolume < 0.7f)
+            if (currentVolume <= 0.7f)
             {
-                // Green for lower volumes
-                //newColor = Color.green;
-                newColor = new Color(0.86f, 0.08f, 0.24f); // crimson
+                // 0 ~ 0.7 : 白 → 血紅
+                float t = Mathf.InverseLerp(0f, 0.7f, currentVolume);
+                newColor = Color.Lerp(white, crimson, t);
             }
-            else if (currentVolume < 0.9f)
+            else if (currentVolume <= 0.9f)
             {
-                // Yellow for medium-low volumes
-                //newColor = Color.yellow;
-                newColor = new Color(1f, 0.843f, 0f); // gold
+                // 0.7 ~ 0.9 : 血紅 → 金色
+                float t = Mathf.InverseLerp(0.7f, 0.9f, currentVolume);
+                newColor = Color.Lerp(crimson, gold, t);
+            }
+            else if (currentVolume <= 1.1f)
+            {
+                // 0.9 ~ 1.1 : 金色 → 綠色
+                float t = Mathf.InverseLerp(0.9f, 1.1f, currentVolume);
+                newColor = Color.Lerp(gold, green, t);
+            }
+            else if (currentVolume <= 1.3f)
+            {
+                // 0.9 ~ 1.1 : 綠色 → 紫色
+                float t = Mathf.InverseLerp(1.1f, 1.3f, currentVolume);
+                newColor = Color.Lerp(green, ceil, t);
             }
             else
             {
-                // Purple for very high volumes (above 1.0)
-                //newColor = new Color(0.5f, 0.0f, 0.5f); // Purple
-                newColor = new Color(0.2f, 1f, 0.2f); // green
+                // > 1.3 : CeilColor
+                newColor = ceil;
             }
 
             if (smooth)
