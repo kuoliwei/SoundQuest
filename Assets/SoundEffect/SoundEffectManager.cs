@@ -1,3 +1,4 @@
+using AIStageBGApp;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,9 +6,11 @@ using UnityEngine;
 public class SoundEffectManager : MonoBehaviour
 {
     public AudioEffectController audioEffectController;
-    [Range(0f, 1f)][SerializeField] float volume = 0f;
+    [Range(0f, 2f)][SerializeField] float volume = 0f;
     [Range(0f, 2f)][SerializeField] float amplitude = 0f;
-    [Range(1f, 5f)][SerializeField] float frequency = 2.5f;
+    [Range(1f, 3f)][SerializeField] float ampScale = 2f;
+    [SerializeField] int ampPower = 3;
+    [Range(1f, 100f)][SerializeField] float frequency = 20f;
     public int SAMPLE_COUNT = 256; // 固定 256 筆
     private float phase; // 以「弧度」作為相位
     // Start is called before the first frame update
@@ -23,6 +26,11 @@ public class SoundEffectManager : MonoBehaviour
 
         // volume 也一併對應到 0..1，用來驅動顏色（EnhancedGridWaveformVisualizer 會依 volume 染色）
         volume = Mathf.Clamp(dB / 100f, 0f, 2f);
+        volume = amplitude;
+
+        // 頻率也隨音量大小變化
+        float t = Mathf.InverseLerp(0f, 1.3f, amplitude);
+        frequency = Mathf.Lerp(10f, 50f, t);
     }
 
     // === 新增：顯示/隱藏波形特效（取代粒子效果的 Pause/Resume） ===
@@ -45,7 +53,7 @@ public class SoundEffectManager : MonoBehaviour
 
         // 每幀更新「連續相位」，確保畫面會流動
         // 相位增量 = 2π f Δt
-        phase += 2f * Mathf.PI * frequency * Time.deltaTime;
+        //phase += 2f * Mathf.PI * frequency * Time.deltaTime;
 
         // 將相位限制在 [0, 2π) 以避免變太大造成精度惡化
         if (phase >= 2f * Mathf.PI) phase -= 2f * Mathf.PI;
@@ -57,16 +65,33 @@ public class SoundEffectManager : MonoBehaviour
         {
             float tLocal = i * dt; // 0..1s 之間的相對時間
             float value = amplitude * Mathf.Sin(phase + 2f * Mathf.PI * frequency * tLocal);
-            samples.Add(value);
+            samples.Add(value * GetScale(i, ampScale, ampPower));
+            //samples.Add(value);
         }
 
         return samples;
     }
+    float GetScale(int i, float scale, int power)
+    {
+        float half = (float)SAMPLE_COUNT / 2f;
+        if (i <= half)
+        {
+            return Mathf.Pow((float)i / half, power) * scale;
+        }
+        else
+        {
+            return Mathf.Pow((float)(SAMPLE_COUNT - i) / half, power) * scale;
+        }
+        //return (float)(SAMPLE_COUNT - i) / (float)SAMPLE_COUNT * scale;
+    }
     // Update is called once per frame
     void Update()
     {
-        audioEffectController.SetVolume(volume);
-
-        audioEffectController.UpdateWaveform(CreatSample(amplitude, frequency));
+        var viz = audioEffectController as EnhancedGridWaveformVisualizer;
+        if (viz != null && viz.IsInitialized)
+        {
+            audioEffectController.SetVolume(volume);
+            audioEffectController.UpdateWaveform(CreatSample(amplitude, Random.Range(1f, frequency)));
+        }
     }
 }

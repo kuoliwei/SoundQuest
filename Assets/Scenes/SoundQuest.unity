@@ -1188,7 +1188,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!120 &491590907
 LineRenderer:
   serializedVersion: 2
@@ -1307,18 +1307,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 491590907}
   pointCount: 256
-  visualizerPosition: {x: 9, y: 0, z: 0}
+  visualizerPosition: {x: 0, y: -2.5, z: 0}
   visualizerRotation: {x: 0, y: 0, z: 0}
-  visualizerScale: {x: 1.8, y: 1, z: 1}
+  visualizerScale: {x: 1, y: 1, z: 1}
   updatePositionInRealtime: 1
-  visualizationPoints: 64
-  visualizationHeight: 5
-  visualizationWidth: 20
+  visualizationPoints: 256
+  visualizationHeight: 4.5
+  visualizationWidth: 18
   smoothSpeed: 10
   lineColor: {r: 1, g: 1, b: 1, a: 1}
   horizontalLineWidth: 0.1
   verticalLineWidth: 0.05
-  mirrorWaveform: 1
+  mirrorWaveform: 0
   addVerticalGridLines: 1
   gridDensity: 1
   useGlowEffect: 0
@@ -1330,7 +1330,7 @@ MonoBehaviour:
   minGlowIntensity: 1
   maxGlowIntensity: 3
   isURP: 0
-  balanceFrequencies: 1
+  balanceFrequencies: 0
   lowFrequencyAttenuation: 0.5
   highFrequencyBoost: 2
   frequencyWeightCurve:
@@ -1341,7 +1341,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   useLogarithmicDistribution: 1
   balanceStrength: 1
-  cropdisplay: 0.5
+  brightness: 1
+  cropdisplay: 1
 --- !u!4 &491590909
 Transform:
   m_ObjectHideFlags: 0
@@ -4724,7 +4725,9 @@ MonoBehaviour:
   audioEffectController: {fileID: 491590908}
   volume: 0
   amplitude: 0
-  frequency: 2.5
+  ampScale: 2
+  ampPower: 3
+  frequency: 20
   SAMPLE_COUNT: 256
 --- !u!1 &2090930414
 GameObject:

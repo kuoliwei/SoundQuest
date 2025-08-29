@@ -13,7 +13,7 @@ namespace AIStageBGApp
         [SerializeField] private bool updatePositionInRealtime = true;
 
         [Header("Visualization Settings")]
-        [SerializeField] private int visualizationPoints = 64;
+        [SerializeField] private int visualizationPoints = 256;
         [SerializeField] private float visualizationHeight = 5f;
         [SerializeField] private float visualizationWidth = 20f;
         [SerializeField] private float smoothSpeed = 10f;
@@ -22,7 +22,7 @@ namespace AIStageBGApp
         [SerializeField] private Color lineColor = Color.white;
         [SerializeField] private float horizontalLineWidth = 0.1f;
         [SerializeField] private float verticalLineWidth = 0.05f;
-        [SerializeField] private bool mirrorWaveform = true;
+        [SerializeField] private bool mirrorWaveform = false;
         [SerializeField] private bool addVerticalGridLines = true;
         [SerializeField] private int gridDensity = 1; // 1 = every point, 2 = every other point, etc.
 
@@ -39,7 +39,7 @@ namespace AIStageBGApp
         [SerializeField] private bool isURP = true; // Flag to indicate if using URP
 
         [Header("Frequency Balance")]
-        [SerializeField] private bool balanceFrequencies = true;
+        [SerializeField] private bool balanceFrequencies = false;
         [SerializeField] private float lowFrequencyAttenuation = 0.5f;
         [SerializeField] private float highFrequencyBoost = 2.0f;
         [SerializeField] private AnimationCurve frequencyWeightCurve;
@@ -63,6 +63,7 @@ namespace AIStageBGApp
         private readonly Color gold = new Color(1f, 0.843f, 0f);
         private readonly Color green = new Color(0.2f, 1f, 0.2f);          // 翠綠色
         private readonly Color ceil = new Color(0.5f, 0f, 0.5f);
+        [SerializeField, Range(0f, 3f)] private float brightness = 2f; // 亮度
 
         // For glow effect
         private float glowTime = 0f;
@@ -79,7 +80,10 @@ namespace AIStageBGApp
         private Color targetColor;
         private float colorSmoothSpeed = 5f;
 
-        public float cropdisplay = .5f;
+        public float cropdisplay = 1f;
+
+        // 欄位
+        public bool IsInitialized { get; private set; }
 
         private void Start()
         {
@@ -178,6 +182,9 @@ namespace AIStageBGApp
 
             // Update vertical line renderers
             UpdateVerticalLineRenderers();
+
+            // Start() 結尾（已建立 arrays/LineRenderer 後）
+            IsInitialized = true;
         }
         private void ApplyGlowIfAvaible(LineRenderer lineRenderer)
         {
@@ -380,6 +387,7 @@ namespace AIStageBGApp
             {
                 float xPos = (i / (float)(visualizationPoints - 1)) * visualizationWidth - (visualizationWidth / 2);
                 float crop = visualizationPoints * cropdisplay;
+                //float crop = visualizationPoints;
 
                 if (i < crop)
                 {
@@ -783,7 +791,10 @@ namespace AIStageBGApp
             if (smooth)
             {
                 // Set the target color for smooth transition in Update()
-                targetColor = newColor;
+                targetColor = newColor * brightness;  // 這裡乘上亮度
+
+                // 保留原本透明度（避免 alpha 也被乘掉）
+                targetColor.a = newColor.a;
 
                 // Adjust color smooth speed based on how dramatic the change is
                 colorSmoothSpeed = 5f;
