@@ -30,7 +30,7 @@ public class SoundEffectManager : MonoBehaviour
 
         // 頻率也隨音量大小變化
         float t = Mathf.InverseLerp(0f, 1.3f, amplitude);
-        frequency = Mathf.Lerp(10f, 50f, t);
+        frequency = Mathf.Lerp(5f, 20f, t);
     }
 
     // === 新增：顯示/隱藏波形特效（取代粒子效果的 Pause/Resume） ===

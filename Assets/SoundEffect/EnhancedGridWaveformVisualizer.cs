@@ -59,10 +59,10 @@ namespace AIStageBGApp
 
         // Effect Color
         private readonly Color white = Color.white;
-        private readonly Color crimson = new Color(0.86f, 0.08f, 0.24f);   // ¦å¬õ¦â
-        private readonly Color gold = new Color(1f, 0.843f, 0f);
-        private readonly Color green = new Color(0.2f, 1f, 0.2f);          // »Aºñ¦â
-        private readonly Color ceil = new Color(0.5f, 0f, 0.5f);
+        private readonly Color crimson = new Color(243f / 256f, 129f / 256f, 129f / 256f);
+        private readonly Color gold = new Color(252f / 256f, 227f / 256f, 138f / 256f);
+        private readonly Color green = new Color(149f / 256f, 225f / 256f, 221f / 256f);
+        private readonly Color ceil = new Color(120f / 256f, 206f / 256f, 222f / 256f);
         [SerializeField, Range(0f, 3f)] private float brightness = 2f; // «G«×
 
         // For glow effect

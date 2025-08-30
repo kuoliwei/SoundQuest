@@ -1316,10 +1316,10 @@ MonoBehaviour:
   visualizationWidth: 18
   smoothSpeed: 10
   lineColor: {r: 1, g: 1, b: 1, a: 1}
-  horizontalLineWidth: 0.1
-  verticalLineWidth: 0.05
+  horizontalLineWidth: 0.015
+  verticalLineWidth: 0.015
   mirrorWaveform: 0
-  addVerticalGridLines: 1
+  addVerticalGridLines: 0
   gridDensity: 1
   useGlowEffect: 0
   glowColor: {r: 1, g: 1, b: 1, a: 1}
