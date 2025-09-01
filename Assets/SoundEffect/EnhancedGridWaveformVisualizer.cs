@@ -23,8 +23,8 @@ namespace AIStageBGApp
 
         [Header("Visual Style")]
         [SerializeField] private Color lineColor = Color.white;
-        [SerializeField] private float horizontalLineWidth = 0.1f;
-        [SerializeField] private float verticalLineWidth = 0.05f;
+        [SerializeField, Range(0.01f, 0.1f)] private float horizontalLineWidth = 0.01f;
+        [SerializeField, Range(0.01f, 0.1f)] private float verticalLineWidth = 0.01f;
         [SerializeField] private bool mirrorWaveform = false;
         [SerializeField] private bool addVerticalGridLines = false;
         [SerializeField] private int gridDensity = 1; // 1 = every point, 2 = every other point, etc.
@@ -364,7 +364,8 @@ namespace AIStageBGApp
                 visualizerContainer.transform.localScale = visualizerScale;
             }
         }
-
+        [Range(-2f, 2f)][SerializeField] float verticalLineTopOffsetMultiple = 0f;
+        [Range(-2f, 2f)][SerializeField] float verticalLineBottomLineOffsetMultiple = 0f;
         private void UpdateVerticalLineRenderers()
         {
             if (!addVerticalGridLines || verticalLineRenderers == null)
@@ -375,8 +376,10 @@ namespace AIStageBGApp
                 int pointIndex = i * gridDensity;
                 if (pointIndex < visualizationPoints && verticalLineRenderers[i] != null)
                 {
-                    verticalLineRenderers[i].SetPosition(0, topLinePositions[pointIndex]);
-                    verticalLineRenderers[i].SetPosition(1, bottomLinePositions[pointIndex]);
+                    verticalLineRenderers[i].SetPosition(0, topLinePositions[pointIndex] + new Vector3(0, lineOffset * verticalLineTopOffsetMultiple, 0));
+                    verticalLineRenderers[i].SetPosition(1, bottomLinePositions[pointIndex] + new Vector3(0, lineOffset * verticalLineBottomLineOffsetMultiple, 0));
+                    verticalLineRenderers[i].startWidth = verticalLineWidth;
+                    verticalLineRenderers[i].endWidth = verticalLineWidth;
                 }
             }
         }
@@ -622,12 +625,13 @@ namespace AIStageBGApp
         //    }
         //}
 
-        private float bottomLinePosition;
-        public void SetBottomLineHeight(float height)
+        private float lineOffset;
+        public void SetBottomLineHeight(float offset)
         {
-            bottomLinePosition = height;
+            lineOffset = offset;
         }
-
+        [Range(-2f, 2f)][SerializeField] float topLineOffsetMultiple = 0f;
+        [Range(-2f, 2f)][SerializeField] float bottomLineOffsetMultiple = 0f;
         private void Update()
         {
             // Update container transform if needed
@@ -646,8 +650,8 @@ namespace AIStageBGApp
                 bottomLinePositions[i] = Vector3.Lerp(bottomLinePositions[i], targetBottomPositions[i], Time.deltaTime * smoothSpeed);
 
                 // Update line renderers
-                topLineRenderer.SetPosition(i, topLinePositions[i]);
-                bottomLineRenderer.SetPosition(i, bottomLinePositions[i] + new Vector3(0, bottomLinePosition, 0));
+                topLineRenderer.SetPosition(i, topLinePositions[i] + new Vector3(0, lineOffset * topLineOffsetMultiple, 0));
+                bottomLineRenderer.SetPosition(i, bottomLinePositions[i] + new Vector3(0, lineOffset * bottomLineOffsetMultiple, 0));
             }
 
             // Smoothly transition colors based on volume
@@ -686,6 +690,10 @@ namespace AIStageBGApp
                     }
                 }
             }
+            topLineRenderer.startWidth = horizontalLineWidth;
+            topLineRenderer.endWidth = horizontalLineWidth;
+            bottomLineRenderer.startWidth = horizontalLineWidth;
+            bottomLineRenderer.endWidth = horizontalLineWidth;
 
             // Update vertical line renderers
             UpdateVerticalLineRenderers();

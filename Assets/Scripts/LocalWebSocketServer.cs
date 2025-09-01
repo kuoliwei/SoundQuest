@@ -9,7 +9,9 @@ public class LocalWebSocketServer : MonoBehaviour
 {
     private WebSocketServer wssv;
     [SerializeField] int port;
-    private float dB = 0f;
+    [Range(0f, 130f)][SerializeField] private float dB = 0f;
+
+    [SerializeField] bool allowTestDbValue = true;
 
     void Start()
     {
@@ -112,6 +114,11 @@ public class LocalWebSocketServer : MonoBehaviour
         if (Input.GetKey(KeyCode.KeypadMinus))
         {
             dB -= 10 * Time.deltaTime;
+            dB = Mathf.Clamp(dB, 0f, 130f);
+            SendJson(new Volume { mode = "dB", dB = $"{(int)dB}", window_sec = "0.2" });
+        }
+        if (allowTestDbValue)
+        {
             dB = Mathf.Clamp(dB, 0f, 130f);
             SendJson(new Volume { mode = "dB", dB = $"{(int)dB}", window_sec = "0.2" });
         }

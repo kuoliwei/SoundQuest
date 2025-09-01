@@ -1316,8 +1316,8 @@ MonoBehaviour:
   visualizationWidth: 18
   smoothSpeed: 10
   lineColor: {r: 1, g: 1, b: 1, a: 1}
-  horizontalLineWidth: 0.015
-  verticalLineWidth: 0.015
+  horizontalLineWidth: 0.1
+  verticalLineWidth: 0.01
   mirrorWaveform: 0
   addVerticalGridLines: 1
   gridDensity: 1
@@ -1343,8 +1343,12 @@ MonoBehaviour:
   balanceStrength: 1
   brightness: 1
   cropdisplay: 1
+  verticalLineTopOffsetMultiple: 0.5
+  verticalLineBottomLineOffsetMultiple: -0.5
   ampScale: 2
   ampPower: 3
+  topLineOffsetMultiple: -0.5
+  bottomLineOffsetMultiple: 0.5
 --- !u!4 &491590909
 Transform:
   m_ObjectHideFlags: 0

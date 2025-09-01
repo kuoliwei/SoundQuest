@@ -33,7 +33,7 @@ public class SoundEffectManager : MonoBehaviour
 
         // 頻率也隨音量大小變化
         float t = Mathf.InverseLerp(0f, 1.3f, amplitude);
-        frequency = Mathf.Lerp(1f, 30f, t);
+        frequency = Mathf.Lerp(5f, 30f, t);
 
         viz.SetBottomLineHeight(dB / 100f);
     }
