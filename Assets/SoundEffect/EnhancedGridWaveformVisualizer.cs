@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Device;
+using static UnityEngine.GraphicsBuffer;
+using UnityEngine.UIElements;
+using UnityEditor;
 namespace AIStageBGApp
 {
 
@@ -23,7 +26,7 @@ namespace AIStageBGApp
         [SerializeField] private float horizontalLineWidth = 0.1f;
         [SerializeField] private float verticalLineWidth = 0.05f;
         [SerializeField] private bool mirrorWaveform = false;
-        [SerializeField] private bool addVerticalGridLines = true;
+        [SerializeField] private bool addVerticalGridLines = false;
         [SerializeField] private int gridDensity = 1; // 1 = every point, 2 = every other point, etc.
 
 
@@ -461,7 +464,7 @@ namespace AIStageBGApp
                     }
 
                     // Update target positions
-                    targetTopPositions[i] = new Vector3(xPos, Mathf.Abs(value), 0); // Always positive for top
+                    targetTopPositions[i] = new Vector3(xPos, Mathf.Abs(value) * GetScale(i, ampScale, ampPower), 0); // Always positive for top
 
                     if (mirrorWaveform)
                     {
@@ -469,7 +472,8 @@ namespace AIStageBGApp
                     }
                     else
                     {
-                        targetBottomPositions[i] = new Vector3(xPos, -value, 0); // Inverse of top (follows waveform)
+                        //targetBottomPositions[i] = new Vector3(xPos, -value, 0); // Inverse of top (follows waveform)
+                        targetBottomPositions[i] = new Vector3(xPos, value / 2f, 0); // Inverse of top (follows waveform)
                     }
                 }
                 else
@@ -479,7 +483,21 @@ namespace AIStageBGApp
                 }
             }
         }
-
+        [Range(1f, 3f)][SerializeField] float ampScale = 2f;
+        [SerializeField] int ampPower = 3;
+        float GetScale(int i, float scale, int power)
+        {
+            float half = (float)targetTopPositions.Length / 2f;
+            if (i <= half)
+            {
+                return Mathf.Pow((float)i / half, power) * scale;
+            }
+            else
+            {
+                return Mathf.Pow((float)(targetTopPositions.Length - i) / half, power) * scale;
+            }
+            //return (float)(SAMPLE_COUNT - i) / (float)SAMPLE_COUNT * scale;
+        }
         //public void UpdateVisualization(List<float> samples) // °µÂk¤@¤Æ
         //{
         //    if (samples == null || samples.Count == 0)
@@ -504,7 +522,7 @@ namespace AIStageBGApp
 
         //        if (i < crop)
         //        {
-                    
+
 
         //            // Get sample for this point with improved distribution
         //            float value = 0;
@@ -600,9 +618,15 @@ namespace AIStageBGApp
         //            targetTopPositions[i] = new Vector3(0, 0, 0); // Always positive for top
         //            targetBottomPositions[i] = new Vector3(0, 0, 0); // Inverse of top (follows waveform)
         //        }
-                
+
         //    }
         //}
+
+        private float bottomLinePosition;
+        public void SetBottomLineHeight(float height)
+        {
+            bottomLinePosition = height;
+        }
 
         private void Update()
         {
@@ -623,7 +647,7 @@ namespace AIStageBGApp
 
                 // Update line renderers
                 topLineRenderer.SetPosition(i, topLinePositions[i]);
-                bottomLineRenderer.SetPosition(i, bottomLinePositions[i]);
+                bottomLineRenderer.SetPosition(i, bottomLinePositions[i] + new Vector3(0, bottomLinePosition, 0));
             }
 
             // Smoothly transition colors based on volume

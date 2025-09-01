@@ -1319,7 +1319,7 @@ MonoBehaviour:
   horizontalLineWidth: 0.015
   verticalLineWidth: 0.015
   mirrorWaveform: 0
-  addVerticalGridLines: 0
+  addVerticalGridLines: 1
   gridDensity: 1
   useGlowEffect: 0
   glowColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1343,6 +1343,8 @@ MonoBehaviour:
   balanceStrength: 1
   brightness: 1
   cropdisplay: 1
+  ampScale: 2
+  ampPower: 3
 --- !u!4 &491590909
 Transform:
   m_ObjectHideFlags: 0
@@ -1352,7 +1354,7 @@ Transform:
   m_GameObject: {fileID: 491590906}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

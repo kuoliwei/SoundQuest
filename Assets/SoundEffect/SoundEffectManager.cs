@@ -11,12 +11,15 @@ public class SoundEffectManager : MonoBehaviour
     [Range(1f, 3f)][SerializeField] float ampScale = 2f;
     [SerializeField] int ampPower = 3;
     [Range(1f, 100f)][SerializeField] float frequency = 20f;
+
     public int SAMPLE_COUNT = 256; // 固定 256 筆
-    private float phase; // 以「弧度」作為相位
+    //[Range(0f, (float)(2.0 * System.Math.PI))][SerializeField] float phase; // 以「弧度」作為相位
+    private float phase;
+    EnhancedGridWaveformVisualizer viz;
     // Start is called before the first frame update
     void Start()
     {
-        
+        viz = audioEffectController as EnhancedGridWaveformVisualizer;
     }
     public void SetAmplitude(float dB)
     {
@@ -30,7 +33,9 @@ public class SoundEffectManager : MonoBehaviour
 
         // 頻率也隨音量大小變化
         float t = Mathf.InverseLerp(0f, 1.3f, amplitude);
-        frequency = Mathf.Lerp(5f, 20f, t);
+        frequency = Mathf.Lerp(1f, 30f, t);
+
+        viz.SetBottomLineHeight(dB / 100f);
     }
 
     // === 新增：顯示/隱藏波形特效（取代粒子效果的 Pause/Resume） ===
@@ -56,7 +61,7 @@ public class SoundEffectManager : MonoBehaviour
         //phase += 2f * Mathf.PI * frequency * Time.deltaTime;
 
         // 將相位限制在 [0, 2π) 以避免變太大造成精度惡化
-        if (phase >= 2f * Mathf.PI) phase -= 2f * Mathf.PI;
+        //if (phase >= 2f * Mathf.PI) phase -= 2f * Mathf.PI;
         // 或：phase = Mathf.Repeat(phase, 2f * Mathf.PI);
 
         // 生成 1 秒跨度的 256 筆取樣（均勻分佈在 0..1s）
@@ -65,7 +70,8 @@ public class SoundEffectManager : MonoBehaviour
         {
             float tLocal = i * dt; // 0..1s 之間的相對時間
             float value = amplitude * Mathf.Sin(phase + 2f * Mathf.PI * frequency * tLocal);
-            samples.Add(value * GetScale(i, ampScale, ampPower));
+            //samples.Add(value * GetScale(i, ampScale, ampPower));
+            samples.Add(value);
             //samples.Add(value);
         }
 
@@ -87,11 +93,10 @@ public class SoundEffectManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var viz = audioEffectController as EnhancedGridWaveformVisualizer;
         if (viz != null && viz.IsInitialized)
         {
-            audioEffectController.SetVolume(volume);
-            audioEffectController.UpdateWaveform(CreatSample(amplitude, Random.Range(1f, frequency)));
+            viz.SetVolume(volume);
+            viz.UpdateWaveform(CreatSample(amplitude, Random.Range(1f, frequency)));
         }
     }
 }

@@ -113,29 +113,29 @@ public class VolumeGameController : MonoBehaviour
         //particleController.SetTrailWidthAbs(size);
         //particleController.SetTrailSpeedAbs(speed);
 
-        if (Mathf.Abs(dBAfterWeight - expected) <= toleranceSlider.value)
-        {
-            successCount++;
-            if (successCount >= requiredSuccessCount)
-            {
-                Debug.Log($"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確，通過");
-                console.text = $"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確，通過";
-                PlayStageVideo(currentIndex);
-                currentIndex++;
-                successCount = 0; // 重置下一關重新計算
-            }
-            else
-            {
-                Debug.Log($"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確");
-                console.text = $"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確";
-            }
-        }
-        else
-        {
-            Debug.Log($"收到 dB={dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略");
-            console.text = $"收到 dB={dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略";
-            successCount = 0;
-        }
+        //if (Mathf.Abs(dBAfterWeight - expected) <= toleranceSlider.value)
+        //{
+        //    successCount++;
+        //    if (successCount >= requiredSuccessCount)
+        //    {
+        //        Debug.Log($"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確，通過");
+        //        console.text = $"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確，通過";
+        //        PlayStageVideo(currentIndex);
+        //        currentIndex++;
+        //        successCount = 0; // 重置下一關重新計算
+        //    }
+        //    else
+        //    {
+        //        Debug.Log($"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確");
+        //        console.text = $"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確";
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.Log($"收到 dB={dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略");
+        //    console.text = $"收到 dB={dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略";
+        //    successCount = 0;
+        //}
     }
 
     void PlayStageVideo(int index)
