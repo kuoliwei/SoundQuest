@@ -95,5 +95,16 @@ public class SceneDisplayController : MonoBehaviour
                 pitchGameController.TriggerSo();
             }
         }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (pitchDisplayCanvas.activeSelf)
+            {
+                pitchGameController.ToggleTestMode();
+            }
+            else if (volumeDisplayCanvas.activeSelf)
+            {
+                volumeGameController.ToggleTestMode();
+            }
+        }
     }
 }

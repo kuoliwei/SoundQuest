@@ -60,10 +60,6 @@ public class VolumeGameController : MonoBehaviour
 
     void OnEnable()
     {
-        toleranceSlider.value = tolerance;
-        weightSlider.value = weight;
-        requiredSuccessSlider.value = requiredSuccessCount;
-        OnToleranceValueChange();
         if (WebSocketClient.Instance != null)
             WebSocketClient.Instance.OnMessageReceived += HandleMessage;
         ResetStage();
@@ -112,8 +108,6 @@ public class VolumeGameController : MonoBehaviour
         // 同步滑桿文字
         if (toleranceSlider != null) toleranceSlider.value = tolerance;
         if (weightSlider != null) weightSlider.value = weight;
-        OnToleranceValueChange();
-        OnWeightValueChange();
 
         if (WebSocketClient.Instance != null)
             WebSocketClient.Instance.OnMessageReceived += HandleMessage;
@@ -219,17 +213,23 @@ public class VolumeGameController : MonoBehaviour
             Invoke(nameof(HideVideo), (float)clip.length);
             Invoke(nameof(UnlockInput), (float)clip.length);
 
-            //// 如果要撥放最後影片，最後階段，等播放完最後關卡影片才播放最後影片
-            //if (index == expectedVolumes.Length - 1)
-            //{
-            //    Invoke(nameof(PlayFinalVideo), (float)clip.length + 0.1f);
-            //}
 
-            // 如果不播最後影片
-            if (index == expectedVolumes.Length - 1)
+            if (clipFinal != null)
             {
-                //Invoke(nameof(ResetStage), (float)clip.length + 0.1f);
-                Invoke(nameof(CloseStage), (float)clip.length + 0.1f);
+                // 如果要撥放最後影片，最後階段，等播放完最後關卡影片才播放最後影片
+                if (index == expectedVolumes.Length - 1)
+                {
+                    Invoke(nameof(PlayFinalVideo), (float)clip.length + 0.1f);
+                }
+            }
+            else
+            {
+                // 如果不播最後影片
+                if (index == expectedVolumes.Length - 1)
+                {
+                    //Invoke(nameof(ResetStage), (float)clip.length + 0.1f);  //  結束後自動重啟遊戲
+                    Invoke(nameof(CloseStage), (float)clip.length + 0.1f);  //  結束後不自動重啟遊戲
+                }
             }
         }
     }
@@ -328,9 +328,16 @@ public class VolumeGameController : MonoBehaviour
         currentIndex = 0;
         successCount = 0;   // 也要歸零
         isLocked = false;
+        isTestMode = false;
         videoImage.color = Color.black;
         soundEffectManager.ResumeEmission();
         dbValue.gameObject.SetActive(true);
+        toleranceSlider.value = tolerance;
+        weightSlider.value = weight;
+        requiredSuccessSlider.value = requiredSuccessCount;
+        OnToleranceValueChange();
+        OnWeightValueChange();
+        OnRequiredSuccessValueChange();
         //particleController.SetEmissionColor((ParticleController.EmissionColor)currentIndex);
         Debug.Log("重置進度：currentIndex = 0，isLocked = false");
         console.text = "開始分貝辨識";
@@ -343,7 +350,7 @@ public class VolumeGameController : MonoBehaviour
     {
         weightValue.text = WeightSliderValue.ToString();
     }
-    public void requiredSuccessValueChange()
+    public void OnRequiredSuccessValueChange()
     {
         requiredSuccessValue.text = RequiredSuccessCount.ToString();
     }

@@ -210,6 +210,7 @@ public class PitchGameController : MonoBehaviour
     {
         currentIndex = 0;
         isLocked = false;
+        isTestMode = false;
         Debug.Log("重置關卡：currentIndex = 0，isLocked = false");
         console.text = "開始唱名辨識";
     }

@@ -1272,11 +1272,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   console: {fileID: 1298080535}
   audioSource: {fileID: 275734426}
-  doClip: {fileID: 8300000, guid: d470091d8f7346846b92712ad4e4efb9, type: 3}
-  miClip: {fileID: 8300000, guid: a1abf8df7a427d943a6ec69d73f1c4b4, type: 3}
-  faClip: {fileID: 8300000, guid: a6c3ced9a1bfe60479f38edd0ee7d3f3, type: 3}
-  soClip: {fileID: 8300000, guid: 47f5b4d8d99f3f542b6a98ab4435ff58, type: 3}
-  finishClip: {fileID: 8300000, guid: 71217603cc20e0544af664686c25fd57, type: 3}
+  doClip: {fileID: 8300000, guid: 0478ac3037fadc740ac46d66562faff4, type: 3}
+  miClip: {fileID: 8300000, guid: 644fb8ffebe7a4d4487fd6d21e1e6f6a, type: 3}
+  faClip: {fileID: 8300000, guid: 350d63e6c34dd4b48865914e5093e001, type: 3}
+  soClip: {fileID: 8300000, guid: 92a0edc2224f67e46845fa731fa6eb26, type: 3}
+  finishClip: {fileID: 0}
   isTestMode: 0
 --- !u!1 &306675561
 GameObject:
@@ -2031,7 +2031,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2090930420}
         m_TargetAssemblyTypeName: VolumeGameController, Assembly-CSharp
-        m_MethodName: requiredSuccessValueChange
+        m_MethodName: OnRequiredSuccessValueChange
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4691,7 +4691,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 1
-    m_MaxSize: 190
+    m_MaxSize: 300
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -4716,15 +4716,15 @@ RectTransform:
   m_GameObject: {fileID: 1444586916}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2090930418}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 80, y: 40}
-  m_SizeDelta: {x: 160, y: 80}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -300, y: -210}
+  m_SizeDelta: {x: 500, y: 350}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1481824712
 GameObject:
@@ -6635,7 +6635,7 @@ MonoBehaviour:
   clip70: {fileID: 32900000, guid: ceec2c45770277f4e954214ad1e10726, type: 3}
   clip90: {fileID: 32900000, guid: 2cb3756a5f4eaa14f88f6879b4be60f7, type: 3}
   clip110: {fileID: 32900000, guid: 7a98fc1e1579c08479d288ed2095beec, type: 3}
-  clipFinal: {fileID: 32900000, guid: 82c01843866064f428947871b3df2252, type: 3}
+  clipFinal: {fileID: 0}
   tolerance: 1
   toleranceSlider: {fileID: 1729913215}
   toleranceValue: {fileID: 1018078897}
