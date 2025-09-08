@@ -18,6 +18,8 @@ public class PitchGameController : MonoBehaviour
     public AudioClip soClip;
     public AudioClip finishClip;
 
+    [Header("測試模式")]
+    [SerializeField] private bool isTestMode = false;
     void OnEnable()
     {
         if (WebSocketClient.Instance != null)
@@ -31,12 +33,50 @@ public class PitchGameController : MonoBehaviour
         if (WebSocketClient.Instance != null)
             WebSocketClient.Instance.OnMessageReceived -= HandleMessage;
     }
+    public void ToggleTestMode()
+    {
+        if (gameObject.activeSelf)
+        {
+            if (isTestMode)
+            {
+                isTestMode = false;
+                console.text = "取消測試模式，可推進關卡";
+            }
+            else
+            {
+                isTestMode = true;
+                console.text = "啟動測試模式，暫停推進關卡";
+            }
+        }
+    }
+    public void HardReset()
+    {
+        //if (WebSocketClient.Instance != null)
+        //    WebSocketClient.Instance.OnMessageReceived -= HandleMessage;
+        //if (WebSocketClient.Instance != null)
+        //    WebSocketClient.Instance.OnMessageReceived += HandleMessage;
+        //currentIndex = 0; // 每次啟用都重置流程
+        //ResetStage();
+        // 1) 清除 Invoke、停音效
+        CancelInvoke();
+        if (audioSource != null) audioSource.Stop();
 
+        // 2) 重掛事件（先退再掛）
+        if (WebSocketClient.Instance != null)
+            WebSocketClient.Instance.OnMessageReceived -= HandleMessage;
+        if (WebSocketClient.Instance != null)
+            WebSocketClient.Instance.OnMessageReceived += HandleMessage;
+
+        // 3) 復位狀態
+        currentIndex = 0;
+        ResetStage();
+    }
     void HandleMessage(string json)
     {
         if (isLocked)
         {
-            Debug.Log($"正在播放音效中，期間不接受指令");
+            Debug.Log("正在播放過關音效中，期間不接受指令");
+            console.text = "正在播放過關音效中，期間不接受指令";
             return;
         }
 
@@ -64,16 +104,21 @@ public class PitchGameController : MonoBehaviour
             expected = expectedNotes[currentIndex];
         }
 
-        if (msg.solfege == expected)
+        if (msg.solfege == expected && !isTestMode)
         {
             console.text = $"收到 {msg.solfege}，當前關卡應該是 {expected}，通過";
             PlayNoteAudio(msg.solfege);
             currentIndex++;
         }
-        else
+        else if(!isTestMode)
         {
             Debug.Log($"收到 {msg.solfege}，但當前關卡應該是 {expected}");
             console.text = $"收到 {msg.solfege}，但當前關卡應該是 {expected}";
+        }
+        if (isTestMode && gameObject.activeSelf)
+        {
+            Debug.Log($"於測試模式收到 {msg.solfege}");
+            console.text = $"於測試模式收到 {msg.solfege}";
         }
     }
 
@@ -110,12 +155,14 @@ public class PitchGameController : MonoBehaviour
     }
     void UnlockInput()
     {
-        Debug.Log("解鎖輸入，允許下一關");
+        Debug.Log("解鎖輸入，允許進入下一關");
+        console.text = "解鎖輸入，允許進入下一關";
         isLocked = false;
     }
     void PlayFinishClip()
     {
         Debug.Log("所有音階正確完成，播放完成音效");
+        console.text = "所有音階正確完成，播放完成音效";
         audioSource.PlayOneShot(finishClip);
 
         // 等完成音效播完後再呼叫 CloseStage
@@ -161,9 +208,10 @@ public class PitchGameController : MonoBehaviour
     }
     void ResetStage()
     {
-        Debug.Log("重置關卡：currentIndex = 0，isLocked = false");
         currentIndex = 0;
         isLocked = false;
+        Debug.Log("重置關卡：currentIndex = 0，isLocked = false");
+        console.text = "開始唱名辨識";
     }
     public void TriggerDo()
     {

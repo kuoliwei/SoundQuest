@@ -61,11 +61,11 @@ namespace AIStageBGApp
         private LineRenderer bottomTriangleLineRenderer;
 
         // Effect Color
-        private readonly Color white = Color.white;
-        private readonly Color crimson = new Color(243f / 256f, 129f / 256f, 129f / 256f);
-        private readonly Color gold = new Color(252f / 256f, 227f / 256f, 138f / 256f);
+        //private readonly Color white = Color.white;
         private readonly Color green = new Color(149f / 256f, 225f / 256f, 221f / 256f);
-        private readonly Color ceil = new Color(120f / 256f, 206f / 256f, 222f / 256f);
+        private readonly Color gold = new Color(252f / 256f, 227f / 256f, 138f / 256f);
+        private readonly Color crimson = new Color(243f / 256f, 129f / 256f, 129f / 256f);
+        //private readonly Color ceil = new Color(120f / 256f, 206f / 256f, 222f / 256f);
         [SerializeField, Range(0f, 3f)] private float brightness = 2f; // «G«×
 
         // For glow effect
@@ -790,34 +790,55 @@ namespace AIStageBGApp
             //    newColor = new Color(0.2f, 1f, 0.2f); // green
             //}
 
+            //if (currentVolume <= 0.7f)
+            //{
+            //    // 0 ~ 0.7 : ¥Õ ¡÷ ¦å¬õ
+            //    float t = Mathf.InverseLerp(0f, 0.7f, currentVolume);
+            //    newColor = Color.Lerp(white, crimson, t);
+            //}
+            //else if (currentVolume <= 0.9f)
+            //{
+            //    // 0.7 ~ 0.9 : ¦å¬õ ¡÷ ª÷¦â
+            //    float t = Mathf.InverseLerp(0.7f, 0.9f, currentVolume);
+            //    newColor = Color.Lerp(crimson, gold, t);
+            //}
+            //else if (currentVolume <= 1.1f)
+            //{
+            //    // 0.9 ~ 1.1 : ª÷¦â ¡÷ ºñ¦â
+            //    float t = Mathf.InverseLerp(0.9f, 1.1f, currentVolume);
+            //    newColor = Color.Lerp(gold, green, t);
+            //}
+            //else if (currentVolume <= 1.3f)
+            //{
+            //    // 0.9 ~ 1.1 : ºñ¦â ¡÷ µµ¦â
+            //    float t = Mathf.InverseLerp(1.1f, 1.3f, currentVolume);
+            //    newColor = Color.Lerp(green, ceil, t);
+            //}
+            //else
+            //{
+            //    // > 1.3 : CeilColor
+            //    newColor = ceil;
+            //}
+
             if (currentVolume <= 0.7f)
             {
-                // 0 ~ 0.7 : ¥Õ ¡÷ ¦å¬õ
-                float t = Mathf.InverseLerp(0f, 0.7f, currentVolume);
-                newColor = Color.Lerp(white, crimson, t);
+                // 0 ~ 0.7 : ºñ
+                newColor = green;
             }
             else if (currentVolume <= 0.9f)
             {
-                // 0.7 ~ 0.9 : ¦å¬õ ¡÷ ª÷¦â
-                float t = Mathf.InverseLerp(0.7f, 0.9f, currentVolume);
-                newColor = Color.Lerp(crimson, gold, t);
+                // 0.7 ~ 0.9 : ª÷
+                newColor = gold;
             }
             else if (currentVolume <= 1.1f)
             {
-                // 0.9 ~ 1.1 : ª÷¦â ¡÷ ºñ¦â
-                float t = Mathf.InverseLerp(0.9f, 1.1f, currentVolume);
-                newColor = Color.Lerp(gold, green, t);
-            }
-            else if (currentVolume <= 1.3f)
-            {
-                // 0.9 ~ 1.1 : ºñ¦â ¡÷ µµ¦â
-                float t = Mathf.InverseLerp(1.1f, 1.3f, currentVolume);
-                newColor = Color.Lerp(green, ceil, t);
+                // 0.9 ~ 1.1 : ¬õ
+                newColor = crimson;
             }
             else
             {
-                // > 1.3 : CeilColor
-                newColor = ceil;
+                // > 1.3 : ¬õ
+                newColor = crimson;
             }
 
             if (smooth)

@@ -15,12 +15,13 @@ public class VolumeGameController : MonoBehaviour
     public VideoClip clipFinal;
 
     private readonly int[] expectedVolumes = { 70, 90, 110 };
-    [Range(0f, 10f)] [SerializeField] float tolerance;
+    [Range(0, 10)] [SerializeField] int tolerance;
     [SerializeField] Slider toleranceSlider;
     [SerializeField] Text toleranceValue;
-    [Range(0f, 2f)][SerializeField] float weight;
+    [Range(0, 20)][SerializeField] int weight;
     [SerializeField] Slider weightSlider;
     [SerializeField] Text weightValue;
+    private float WeightSliderValue => weightSlider.value / 10f;
 
     [SerializeField] Text console;
     [SerializeField] Text dbValue;
@@ -44,18 +45,24 @@ public class VolumeGameController : MonoBehaviour
     [SerializeField] float maxDb;                 // 正規化上限
 
     [Header("關卡通過條件")]
-    [SerializeField] private int requiredSuccessCount;  // 需要連續幾次正確才算過關
-    private int successCount = 0;                           // 當前連續正確次數
+    [Range(1, 11)] [SerializeField] private int requiredSuccessCount;  // 需要連續幾次正確才算過關
+    private int successCount = 1;                           // 當前連續正確次數
+    [SerializeField] Slider requiredSuccessSlider;
+    private int RequiredSuccessCount => (int)requiredSuccessSlider.value == 1 ? 1 : ((int)requiredSuccessSlider.value - 1) * 10;
+    [SerializeField] Text requiredSuccessValue;
 
     [Header("流程設定")]
     [SerializeField] private bool restartAfterFinal = false;
     // 勾選：最終影片播畢後重頭開始；不勾：播畢後關閉關卡（全黑無特效）
 
+    [Header("測試模式")]
+    [SerializeField] private bool isTestMode = false;
 
     void OnEnable()
     {
         toleranceSlider.value = tolerance;
         weightSlider.value = weight;
+        requiredSuccessSlider.value = requiredSuccessCount;
         OnToleranceValueChange();
         if (WebSocketClient.Instance != null)
             WebSocketClient.Instance.OnMessageReceived += HandleMessage;
@@ -66,6 +73,53 @@ public class VolumeGameController : MonoBehaviour
     {
         if (WebSocketClient.Instance != null)
             WebSocketClient.Instance.OnMessageReceived -= HandleMessage;
+    }
+    public void ToggleTestMode()
+    {
+        if (gameObject.activeSelf)
+        {
+            if (isTestMode)
+            {
+                isTestMode = false;
+                console.text = "取消測試模式，可推進關卡";
+            }
+            else
+            {
+                isTestMode = true;
+                console.text = "啟動測試模式，暫停推進關卡";
+            }
+        }
+    }
+    public void HardReset()
+    {
+        //if (WebSocketClient.Instance != null)
+        //    WebSocketClient.Instance.OnMessageReceived -= HandleMessage;
+        //toleranceSlider.value = tolerance;
+        //weightSlider.value = weight;
+        //OnToleranceValueChange();
+        //if (WebSocketClient.Instance != null)
+        //    WebSocketClient.Instance.OnMessageReceived += HandleMessage;
+        //ResetStage();
+        // 1) 先清除既有 Invoke 與播放狀態
+        CancelInvoke();
+        if (videoPlayer != null) { videoPlayer.Stop(); videoPlayer.clip = null; }
+        if (videoImage != null) { videoImage.color = Color.black; }
+
+        // 2) 重掛事件（避免重複訂閱）
+        if (WebSocketClient.Instance != null)
+            WebSocketClient.Instance.OnMessageReceived -= HandleMessage;
+
+        // 同步滑桿文字
+        if (toleranceSlider != null) toleranceSlider.value = tolerance;
+        if (weightSlider != null) weightSlider.value = weight;
+        OnToleranceValueChange();
+        OnWeightValueChange();
+
+        if (WebSocketClient.Instance != null)
+            WebSocketClient.Instance.OnMessageReceived += HandleMessage;
+
+        // 3) 復位狀態 + UI/特效
+        ResetStage();
     }
     void DisplayDbValue(float dB, Color color)
     {
@@ -104,7 +158,7 @@ public class VolumeGameController : MonoBehaviour
 
         int expected = expectedVolumes[currentIndex];
 
-        float dBAfterWeight = dB * weightSlider.value;
+        float dBAfterWeight = dB * WeightSliderValue;
         DisplayDbValue(dBAfterWeight, Color.white);
         //float t = Mathf.Clamp01(Mathf.InverseLerp(minDb, maxDb, dBAfterWeight));
         //float size = Mathf.Lerp(sizeRange.x, sizeRange.y, t);
@@ -113,29 +167,34 @@ public class VolumeGameController : MonoBehaviour
         //particleController.SetTrailWidthAbs(size);
         //particleController.SetTrailSpeedAbs(speed);
 
-        //if (Mathf.Abs(dBAfterWeight - expected) <= toleranceSlider.value)
-        //{
-        //    successCount++;
-        //    if (successCount >= requiredSuccessCount)
-        //    {
-        //        Debug.Log($"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確，通過");
-        //        console.text = $"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確，通過";
-        //        PlayStageVideo(currentIndex);
-        //        currentIndex++;
-        //        successCount = 0; // 重置下一關重新計算
-        //    }
-        //    else
-        //    {
-        //        Debug.Log($"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確");
-        //        console.text = $"收到dB：{dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確";
-        //    }
-        //}
-        //else
-        //{
-        //    Debug.Log($"收到 dB={dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略");
-        //    console.text = $"收到 dB={dB}，經過加權{weightSlider.value}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略";
-        //    successCount = 0;
-        //}
+        if (Mathf.Abs(dBAfterWeight - expected) <= toleranceSlider.value && !isTestMode)
+        {
+            successCount++;
+            if (successCount >= RequiredSuccessCount)
+            {
+                Debug.Log($"收到dB：{dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確，通過");
+                console.text = $"收到dB：{dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確，通過";
+                PlayStageVideo(currentIndex);
+                currentIndex++;
+                successCount = 0; // 重置下一關重新計算
+            }
+            else
+            {
+                Debug.Log($"收到dB：{dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確");
+                console.text = $"收到dB：{dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確";
+            }
+        }
+        else if (!isTestMode)
+        {
+            Debug.Log($"收到 dB={dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略");
+            console.text = $"收到 dB={dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略";
+            successCount = 0;
+        }
+        if (isTestMode && gameObject.activeSelf)
+        {
+            Debug.Log($"於測試模式收到 dB={dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB");
+            console.text = $"於測試模式收到 dB={dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB";
+        }
     }
 
     void PlayStageVideo(int index)
@@ -274,6 +333,7 @@ public class VolumeGameController : MonoBehaviour
         dbValue.gameObject.SetActive(true);
         //particleController.SetEmissionColor((ParticleController.EmissionColor)currentIndex);
         Debug.Log("重置進度：currentIndex = 0，isLocked = false");
+        console.text = "開始分貝辨識";
     }
     public void OnToleranceValueChange()
     {
@@ -281,6 +341,49 @@ public class VolumeGameController : MonoBehaviour
     }
     public void OnWeightValueChange()
     {
-        weightValue.text = weightSlider.value.ToString();
+        weightValue.text = WeightSliderValue.ToString();
+    }
+    public void requiredSuccessValueChange()
+    {
+        requiredSuccessValue.text = RequiredSuccessCount.ToString();
+    }
+
+    // --- 直接觸發三個音量關卡 ---
+    public void Trigger70()
+    {
+        SimulatePassForTarget(70);
+    }
+
+    public void Trigger90()
+    {
+        SimulatePassForTarget(90);
+    }
+
+    public void Trigger110()
+    {
+        SimulatePassForTarget(110);
+    }
+
+    /// <summary>
+    /// 依目標 dB 值建立一筆 JSON 丟給 HandleMessage，保持與 WebSocket 相同流程。
+    /// </summary>
+    private void SimulatePassForTarget(int targetDb)
+    {
+        if (isLocked) return;
+
+        // 避免除以零，反推一個原始 dB，讓加權後剛好是目標值
+        float w = Mathf.Max(0.0001f, weightSlider != null ? WeightSliderValue : 1f);
+        int injectedDb = Mathf.RoundToInt(targetDb / w);
+        Debug.Log($"{WeightSliderValue},{w},{injectedDb}");
+        // 組 JSON
+        string json = "{\"dB\":\"" + injectedDb.ToString() + "\"}";
+
+        // 依 requiredSuccessCount 連續送入多次，保證直接過關
+        int times = Mathf.Max(1, RequiredSuccessCount);
+        for (int i = 0; i < times; i++)
+        {
+            HandleMessage(json);
+            if (isLocked) break; // 一旦過關就會被鎖住，之後不用再送
+        }
     }
 }
