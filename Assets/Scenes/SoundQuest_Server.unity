@@ -167,8 +167,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   port: 8765
-  dB: 0
-  allowDbValueSlider: 0
+  dB: 52
+  allowDbValueSlider: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

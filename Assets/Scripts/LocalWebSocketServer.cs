@@ -10,7 +10,7 @@ public class LocalWebSocketServer : MonoBehaviour
     private WebSocketServer wssv;
     [SerializeField] int port;
     [Range(0, 130)][SerializeField] private int dB = 0;
-    [SerializeField] bool allowDbValueSlider = true;
+    [SerializeField] bool allowDbValueSlider;
     private float lastDB;
 
     void Start()
@@ -67,17 +67,17 @@ public class LocalWebSocketServer : MonoBehaviour
     }
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.D))
-        //    SendJson(new Pitch {mode = "solfege",  solfege = "Do", window_sec = "0.2"});
+        if (Input.GetKeyDown(KeyCode.D))
+            SendJson(new Pitch { mode = "solfege", solfege = "Do", window_sec = "0.2" });
 
-        //if (Input.GetKeyDown(KeyCode.M))
-        //    SendJson(new Pitch { mode = "solfege", solfege = "Mi", window_sec = "0.2" });
+        if (Input.GetKeyDown(KeyCode.M))
+            SendJson(new Pitch { mode = "solfege", solfege = "Mi", window_sec = "0.2" });
 
-        //if (Input.GetKeyDown(KeyCode.F))
-        //    SendJson(new Pitch { mode = "solfege", solfege = "Fa", window_sec = "0.2" });
+        if (Input.GetKeyDown(KeyCode.F))
+            SendJson(new Pitch { mode = "solfege", solfege = "Fa", window_sec = "0.2" });
 
-        //if (Input.GetKeyDown(KeyCode.S))
-        //    SendJson(new Pitch { mode = "solfege", solfege = "Sol", window_sec = "0.2" });
+        if (Input.GetKeyDown(KeyCode.S))
+            SendJson(new Pitch { mode = "solfege", solfege = "Sol", window_sec = "0.2" });
 
         //if (Input.GetKeyDown(KeyCode.Alpha1))
         //    SendJson(new Volume { mode = "dB", dB = "10", window_sec = "0.2" });

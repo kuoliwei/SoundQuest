@@ -6650,7 +6650,7 @@ MonoBehaviour:
   speedRange: {x: 0, y: 20}
   minDb: 0
   maxDb: 100
-  requiredSuccessCount: 2
+  requiredSuccessCount: 6
   requiredSuccessSlider: {fileID: 495689176}
   requiredSuccessValue: {fileID: 443370329}
   restartAfterFinal: 0

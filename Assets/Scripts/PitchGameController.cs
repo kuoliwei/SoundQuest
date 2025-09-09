@@ -7,6 +7,7 @@ public class PitchGameController : MonoBehaviour
     private readonly string[] expectedNotes = { "Do", "Mi", "Fa", "Sol" };
     private int currentIndex = 0;
     private bool isLocked = false;
+    private bool isStageClosed = false;
 
     [SerializeField] Text console;
 
@@ -73,7 +74,7 @@ public class PitchGameController : MonoBehaviour
     }
     void HandleMessage(string json)
     {
-        if (isLocked)
+        if (isLocked && !isStageClosed)
         {
             Debug.Log("正在播放過關音效中，期間不接受指令");
             console.text = "正在播放過關音效中，期間不接受指令";
@@ -188,6 +189,7 @@ public class PitchGameController : MonoBehaviour
 
         // 2) 鎖住輸入，讓 HandleMessage 之後直接忽略來自 WebSocket 的事件
         isLocked = true;
+        isStageClosed = true;
 
         // 3) 停止目前可能正在播放的音效
         if (audioSource != null)
@@ -210,6 +212,7 @@ public class PitchGameController : MonoBehaviour
     {
         currentIndex = 0;
         isLocked = false;
+        isStageClosed = false;
         isTestMode = false;
         Debug.Log("重置關卡：currentIndex = 0，isLocked = false");
         console.text = "開始唱名辨識";

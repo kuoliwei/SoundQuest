@@ -27,6 +27,7 @@ public class VolumeGameController : MonoBehaviour
     [SerializeField] Text dbValue;
     private int currentIndex = 0;
     private bool isLocked = false;
+    private bool isStageClosed = false;
     [SerializeField] float showVideoDelay;
 
     //// VolumeGameController.cs 片段：新增欄位
@@ -122,9 +123,10 @@ public class VolumeGameController : MonoBehaviour
     }
     void HandleMessage(string json)
     {
-        if (isLocked)
+        if (isLocked && !isStageClosed)
         {
             Debug.Log("正在播放影片中，期間不接受音量輸入");
+            console.text = "正在播放影片中，期間不接受音量輸入";
             return;
         }
 
@@ -152,7 +154,7 @@ public class VolumeGameController : MonoBehaviour
 
         int expected = expectedVolumes[currentIndex];
 
-        float dBAfterWeight = dB * WeightSliderValue;
+        int dBAfterWeight = Mathf.RoundToInt(dB * WeightSliderValue);
         DisplayDbValue(dBAfterWeight, Color.white);
         //float t = Mathf.Clamp01(Mathf.InverseLerp(minDb, maxDb, dBAfterWeight));
         //float size = Mathf.Lerp(sizeRange.x, sizeRange.y, t);
@@ -174,15 +176,15 @@ public class VolumeGameController : MonoBehaviour
             }
             else
             {
-                Debug.Log($"收到dB：{dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確");
-                console.text = $"收到dB：{dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，連續 {successCount} 次正確";
+                Debug.Log($"收到dB：{dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，累計 {successCount} 次正確");
+                console.text = $"收到dB：{dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，當前關卡{expected} dB，誤差未超出容錯{toleranceSlider.value} dB，累計 {successCount} 次正確";
             }
         }
         else if (!isTestMode)
         {
             Debug.Log($"收到 dB={dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略");
             console.text = $"收到 dB={dB}，經過加權{WeightSliderValue}倍為{dBAfterWeight} dB，但目前預期為 {expected} dB，誤差超出容錯{toleranceSlider.value} dB，忽略";
-            successCount = 0;
+            //successCount = 0; // 若要改成累計制而非連續制就註解掉這行
         }
         if (isTestMode && gameObject.activeSelf)
         {
@@ -291,6 +293,7 @@ public class VolumeGameController : MonoBehaviour
 
         // 鎖住輸入，避免後續又吃到訊息
         isLocked = true;
+        isStageClosed = true;
 
         // 視覺：全黑、停止影片
         if (videoPlayer != null)
@@ -328,6 +331,7 @@ public class VolumeGameController : MonoBehaviour
         currentIndex = 0;
         successCount = 0;   // 也要歸零
         isLocked = false;
+        isStageClosed = false;
         isTestMode = false;
         videoImage.color = Color.black;
         soundEffectManager.ResumeEmission();
@@ -376,21 +380,52 @@ public class VolumeGameController : MonoBehaviour
     /// </summary>
     private void SimulatePassForTarget(int targetDb)
     {
-        if (isLocked) return;
+        //if (isLocked) return;
 
-        // 避免除以零，反推一個原始 dB，讓加權後剛好是目標值
-        float w = Mathf.Max(0.0001f, weightSlider != null ? WeightSliderValue : 1f);
-        int injectedDb = Mathf.RoundToInt(targetDb / w);
-        Debug.Log($"{WeightSliderValue},{w},{injectedDb}");
-        // 組 JSON
-        string json = "{\"dB\":\"" + injectedDb.ToString() + "\"}";
+        //// 避免除以零，反推一個原始 dB，讓加權後剛好是目標值
+        //float w = Mathf.Max(0.1f, weightSlider != null ? WeightSliderValue : 1f);
+        //int injectedDb = Mathf.RoundToInt((float)targetDb / w);
+        //Debug.Log($"{WeightSliderValue},{w},{injectedDb}");
+        //// 組 JSON
+        //string json = "{\"dB\":\"" + injectedDb.ToString() + "\"}";
 
-        // 依 requiredSuccessCount 連續送入多次，保證直接過關
-        int times = Mathf.Max(1, RequiredSuccessCount);
-        for (int i = 0; i < times; i++)
+        //// 依 requiredSuccessCount 連續送入多次，保證直接過關
+        //int times = Mathf.Max(1, RequiredSuccessCount);
+        //for (int i = 0; i < times; i++)
+        //{
+        //    HandleMessage(json);
+        //    if (isLocked) break; // 一旦過關就會被鎖住，之後不用再送
+        //}
+
+        if (isLocked || isStageClosed) return;
+        if (currentIndex >= expectedVolumes.Length) return;
+
+        int expected = expectedVolumes[currentIndex];
+        if (expected != targetDb)
         {
-            HandleMessage(json);
-            if (isLocked) break; // 一旦過關就會被鎖住，之後不用再送
+            if (console != null) console.text = $"[TEST] 目前關卡是 {expected} dB，忽略 {targetDb} dB";
+            return;
         }
+        soundEffectManager.SetAmplitude(targetDb);
+        //// 對齊目前要通過的關卡索引（若你想強制跳關就保留；若只允許通過當前關卡，可改用 currentIndex 檢查）
+        //int targetIndex = System.Array.IndexOf(expectedVolumes, targetDb);
+        //if (targetIndex < 0) return;
+
+        //// 若想嚴格只能通過「目前所在的關卡」，就取消下一行並改用 if (targetIndex != currentIndex) return;
+        //currentIndex = targetIndex;
+
+        // 直接視為已達成通過條件
+        successCount = RequiredSuccessCount;
+
+        // 播該關卡影片與調度後續流程（Show/Hide/Unlock/Final/Close 都在這裡處理）
+        PlayStageVideo(currentIndex);
+
+        // 推進到下一關，並把連續計數歸零，與 HandleMessage 成功分支保持一致
+        currentIndex++;
+        successCount = 0;
+
+        // UI 提示（可選）
+        if (console != null)
+            console.text = $"[TEST] 直接通過 {targetDb} dB 關卡";
     }
 }

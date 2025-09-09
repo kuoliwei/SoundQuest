@@ -21,21 +21,22 @@ public class SoundEffectManager : MonoBehaviour
     {
         viz = audioEffectController as EnhancedGridWaveformVisualizer;
     }
-    public void SetAmplitude(float dB)
+    public void SetAmplitude(int dB)
     {
+        float fDB = (float)dB;
         // dB 例如 70、90、110… -> amplitude = dB/100
         // 你的 amplitude Range 是 [0, 2]，這裡做安全夾限
-        amplitude = Mathf.Clamp(dB / 100f, 0f, 2f);
+        amplitude = Mathf.Clamp(fDB / 100f, 0f, 2f);
 
         // volume 也一併對應到 0..1，用來驅動顏色（EnhancedGridWaveformVisualizer 會依 volume 染色）
-        volume = Mathf.Clamp(dB / 100f, 0f, 2f);
+        volume = Mathf.Clamp(fDB / 100f, 0f, 2f);
         volume = amplitude;
 
         // 頻率也隨音量大小變化
         float t = Mathf.InverseLerp(0f, 1.3f, amplitude);
         frequency = Mathf.Lerp(5f, 30f, t);
 
-        viz.SetBottomLineHeight(dB / 100f);
+        viz.SetBottomLineHeight(fDB / 100f);
     }
 
     // === 新增：顯示/隱藏波形特效（取代粒子效果的 Pause/Resume） ===
